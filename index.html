@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Xion Gaming — Rakit PC Sesuai Budget & Kebutuhanmu</title>
+<meta name="description" content="Pilih komponen, lihat total harga langsung, pesan via WhatsApp. Rakit PC gaming tanpa ribet bersama Xion Gaming.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- SVG SPRITE (icons dipakai di seluruh halaman) -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="ic-logo" viewBox="0 0 32 32">
+      <path d="M4 4L16 16L4 28" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M28 4L16 16L28 28" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.45"/>
+      <circle cx="16" cy="16" r="2.4" fill="currentColor"/>
+    </symbol>
+    <symbol id="ic-cpu" viewBox="0 0 24 24">
+      <rect x="6" y="6" width="12" height="12" rx="1.5" stroke="currentColor" stroke-width="1.6" fill="none"/>
+      <rect x="9.5" y="9.5" width="5" height="5" stroke="currentColor" stroke-width="1.3" fill="none"/>
+      <path d="M9 2v3M12 2v3M15 2v3M9 19v3M12 19v3M15 19v3M2 9h3M2 12h3M2 15h3M19 9h3M19 12h3M19 15h3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="ic-mobo" viewBox="0 0 24 24">
+      <rect x="3" y="3" width="18" height="18" rx="1.5" stroke="currentColor" stroke-width="1.6" fill="none"/>
+      <rect x="6" y="6" width="6" height="6" stroke="currentColor" stroke-width="1.3" fill="none"/>
+      <path d="M15 6h3M15 9h3M6 15h4M13 15h5M6 18h2M11 18h2M16 18h2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="ic-ram" viewBox="0 0 24 24">
+      <rect x="3" y="7" width="18" height="10" rx="1" stroke="currentColor" stroke-width="1.6" fill="none"/>
+      <path d="M6 7V4.5M9 7V4.5M12 7V4.5M15 7V4.5M18 7V4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+      <path d="M6 12h3M6 15h6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="ic-gpu" viewBox="0 0 24 24">
+      <rect x="2.5" y="7" width="19" height="9" rx="1.5" stroke="currentColor" stroke-width="1.6" fill="none"/>
+      <circle cx="8" cy="11.5" r="2" stroke="currentColor" stroke-width="1.3" fill="none"/>
+      <circle cx="14.5" cy="11.5" r="2" stroke="currentColor" stroke-width="1.3" fill="none"/>
+      <path d="M2.5 16v2.5h5V16" stroke="currentColor" stroke-width="1.3" fill="none"/>
+    </symbol>
+    <symbol id="ic-storage" viewBox="0 0 24 24">
+      <rect x="4" y="4" width="16" height="16" rx="2" stroke="currentColor" stroke-width="1.6" fill="none"/>
+      <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.4" fill="none"/>
+      <circle cx="12" cy="12" r="0.8" fill="currentColor"/>
+      <path d="M7 7h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="ic-psu" viewBox="0 0 24 24">
+      <rect x="3" y="6" width="18" height="12" rx="1.5" stroke="currentColor" stroke-width="1.6" fill="none"/>
+      <path d="M8 12h2l1.2-2.4L12.8 14.4 14 12h2" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="ic-case" viewBox="0 0 24 24">
+      <rect x="6" y="2" width="12" height="20" rx="1.5" stroke="currentColor" stroke-width="1.6" fill="none"/>
+      <circle cx="12" cy="7" r="2.4" stroke="currentColor" stroke-width="1.3" fill="none"/>
+      <path d="M9 14h6M9 17h6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="ic-whatsapp" viewBox="0 0 24 24">
+      <path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2z" fill="currentColor" opacity="0.15"/>
+      <path d="M17 14.5c-.3-.15-1.8-.9-2.1-1-.3-.1-.5-.15-.7.15-.2.3-.8 1-1 1.2-.2.2-.35.2-.65.05-.3-.15-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.45.15-.6.15-.15.3-.35.45-.5.15-.2.2-.3.3-.5.1-.2.05-.4 0-.55-.05-.15-.65-1.6-.9-2.2-.25-.55-.5-.5-.65-.5h-.55c-.2 0-.5.05-.75.35-.25.3-1 1-1 2.4s1.05 2.8 1.2 3c.15.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.35.15 1.85.1.55-.1 1.8-.75 2.05-1.45.25-.7.25-1.3.15-1.45-.05-.15-.25-.25-.55-.4z" fill="currentColor"/>
+    </symbol>
+    <symbol id="ic-check" viewBox="0 0 24 24">
+      <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="ic-menu" viewBox="0 0 24 24">
+      <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="index.html" class="logo">
+      <span class="logo-mark"><svg><use href="#ic-logo"/></svg></span>
+      Xion <span class="accent">Gaming</span>
+    </a>
+    <nav class="main-nav">
+      <a href="index.html" class="active">Beranda</a>
+      <a href="builder.html">Rakit PC</a>
+      <a href="index.html#paket">Paket Rakitan</a>
+      <a href="index.html#kontak">Kontak</a>
+    </nav>
+    <a href="builder.html" class="btn-nav-cta">Mulai Rakit</a>
+    <button class="nav-toggle" aria-label="Buka menu"><svg width="18" height="18"><use href="#ic-menu"/></svg></button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-inner">
+    <span class="eyebrow"><span class="dot"></span> Part picker &amp; pemesanan via WhatsApp</span>
+    <h1>Rakit PC-mu,<br><span class="grad">kami urus koneksinya.</span></h1>
+    <p class="lede">Pilih processor, motherboard, sampai casing satu per satu. Total harga terhitung otomatis, dan pesanan langsung terkirim ke WhatsApp kami — tanpa akun, tanpa ribet.</p>
+    <div class="hero-actions">
+      <a href="builder.html" class="btn btn-primary">Mulai Rakit PC</a>
+      <a href="#paket" class="btn btn-ghost">Lihat Paket Siap Pakai</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><b>7</b><span>Kategori komponen</span></div>
+      <div class="stat"><b>28+</b><span>Pilihan produk</span></div>
+      <div class="stat"><b>&lt; 1 menit</b><span>Sampai chat WhatsApp</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="kategori">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="section-tag">Katalog</span>
+        <h2>Cari berdasarkan kategori</h2>
+      </div>
+      <p>Langsung lompat ke kategori yang kamu butuhkan di halaman Rakit PC.</p>
+    </div>
+    <div class="cat-grid">
+      <a class="cat-card" href="builder.html?cat=cpu">
+        <span class="icon"><svg><use href="#ic-cpu"/></svg></span>
+        <h3>Processor</h3>
+        <span class="count">AMD &amp; Intel</span>
+      </a>
+      <a class="cat-card" href="builder.html?cat=motherboard">
+        <span class="icon"><svg><use href="#ic-mobo"/></svg></span>
+        <h3>Motherboard</h3>
+        <span class="count">AM4 &amp; LGA1700</span>
+      </a>
+      <a class="cat-card" href="builder.html?cat=ram">
+        <span class="icon"><svg><use href="#ic-ram"/></svg></span>
+        <h3>RAM</h3>
+        <span class="count">DDR4 &amp; DDR5</span>
+      </a>
+      <a class="cat-card" href="builder.html?cat=gpu">
+        <span class="icon"><svg><use href="#ic-gpu"/></svg></span>
+        <h3>VGA Card</h3>
+        <span class="count">NVIDIA &amp; AMD</span>
+      </a>
+      <a class="cat-card" href="builder.html?cat=storage">
+        <span class="icon"><svg><use href="#ic-storage"/></svg></span>
+        <h3>Storage</h3>
+        <span class="count">SSD NVMe &amp; HDD</span>
+      </a>
+      <a class="cat-card" href="builder.html?cat=psu">
+        <span class="icon"><svg><use href="#ic-psu"/></svg></span>
+        <h3>Power Supply</h3>
+        <span class="count">450W – 750W</span>
+      </a>
+      <a class="cat-card" href="builder.html?cat=casing">
+        <span class="icon"><svg><use href="#ic-case"/></svg></span>
+        <h3>Casing</h3>
+        <span class="count">Micro ATX – Full Tower</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt" id="paket">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="section-tag">Rekomendasi</span>
+        <h2>Paket rakitan siap pakai</h2>
+      </div>
+      <p>Belum mau pilih satu-satu? Mulai dari salah satu paket ini, lalu sesuaikan di halaman Rakit PC.</p>
+    </div>
+    <div class="build-grid">
+      <div class="build-card">
+        <span class="tier">Entry</span>
+        <h3>Hemat 1080p</h3>
+        <span class="price">Rp 8.500.000</span>
+        <ul>
+          <li>AMD Ryzen 5 5600</li>
+          <li>16GB DDR4-3200</li>
+          <li>RTX 3050 8GB</li>
+          <li>SSD NVMe 500GB</li>
+        </ul>
+        <a href="builder.html" class="btn btn-ghost">Rakit dari Paket Ini</a>
+      </div>
+      <div class="build-card">
+        <span class="tier">Populer</span>
+        <h3>All-Round 1440p</h3>
+        <span class="price">Rp 14.200.000</span>
+        <ul>
+          <li>Intel Core i5-13400F</li>
+          <li>32GB DDR4-3600</li>
+          <li>RTX 4060 8GB</li>
+          <li>SSD NVMe 1TB Gen4</li>
+        </ul>
+        <a href="builder.html" class="btn btn-ghost">Rakit dari Paket Ini</a>
+      </div>
+      <div class="build-card">
+        <span class="tier">Enthusiast</span>
+        <h3>High-End 1440p/4K</h3>
+        <span class="price">Rp 21.800.000</span>
+        <ul>
+          <li>AMD Ryzen 7 5700X3D</li>
+          <li>32GB DDR5-6000</li>
+          <li>RTX 4070 12GB</li>
+          <li>SSD NVMe 1TB Gen4</li>
+        </ul>
+        <a href="builder.html" class="btn btn-ghost">Rakit dari Paket Ini</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer" id="kontak">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="index.html" class="logo">
+          <span class="logo-mark"><svg><use href="#ic-logo"/></svg></span>
+          Xion <span class="accent">Gaming</span>
+        </a>
+        <p>Toko rakit PC gaming. Pilih komponen, cek total harga, pesan langsung via WhatsApp.</p>
+      </div>
+      <div class="footer-links">
+        <div>
+          <h4>Navigasi</h4>
+          <ul>
+            <li><a href="index.html">Beranda</a></li>
+            <li><a href="builder.html">Rakit PC</a></li>
+            <li><a href="index.html#paket">Paket Rakitan</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Kontak</h4>
+          <ul>
+            <li><a href="https://wa.me/6285814565849" target="_blank" rel="noopener">WhatsApp Order</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Xion Gaming.</span>
+      <span>Harga &amp; stok dapat berubah sewaktu-waktu, konfirmasi via WhatsApp.</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
