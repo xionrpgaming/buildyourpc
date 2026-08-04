@@ -29,18 +29,41 @@
   </div>
   <div class="particle-field" id="heroParticles" aria-hidden="true"></div>
 
+  <div class="hero-float hero-float--chip" aria-hidden="true">
+    <svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+      <rect x="30" y="30" width="80" height="80" rx="10" fill="#171b24" stroke="#7c5cff" stroke-width="1.6"/>
+      <rect x="46" y="46" width="48" height="48" rx="4" fill="#12151c" stroke="#22d3ee" stroke-width="1.2"/>
+      <g stroke="#7c5cff" stroke-width="1.6">
+        <line x1="30" y1="46" x2="14" y2="46"/><line x1="30" y1="62" x2="14" y2="62"/>
+        <line x1="30" y1="78" x2="14" y2="78"/><line x1="30" y1="94" x2="14" y2="94"/>
+        <line x1="110" y1="46" x2="126" y2="46"/><line x1="110" y1="62" x2="126" y2="62"/>
+        <line x1="110" y1="78" x2="126" y2="78"/><line x1="110" y1="94" x2="126" y2="94"/>
+        <line x1="46" y1="30" x2="46" y2="14"/><line x1="62" y1="30" x2="62" y2="14"/>
+        <line x1="78" y1="30" x2="78" y2="14"/><line x1="94" y1="30" x2="94" y2="14"/>
+        <line x1="46" y1="110" x2="46" y2="126"/><line x1="62" y1="110" x2="62" y2="126"/>
+        <line x1="78" y1="110" x2="78" y2="126"/><line x1="94" y1="110" x2="94" y2="126"/>
+      </g>
+    </svg>
+  </div>
+  <div class="hero-float hero-float--gpu" aria-hidden="true">
+    <svg viewBox="0 0 220 110" xmlns="http://www.w3.org/2000/svg">
+      <rect x="6" y="10" width="208" height="70" rx="8" fill="#171b24" stroke="#22d3ee" stroke-width="1.6"/>
+      <rect x="6" y="10" width="208" height="14" rx="6" fill="#12151c"/>
+      <circle cx="60" cy="55" r="24" fill="#0b0d12" stroke="#7c5cff" stroke-width="1.4"/>
+      <circle cx="60" cy="55" r="5" fill="#7c5cff"/>
+      <circle cx="140" cy="55" r="24" fill="#0b0d12" stroke="#22d3ee" stroke-width="1.4"/>
+      <circle cx="140" cy="55" r="5" fill="#22d3ee"/>
+      <rect x="196" y="30" width="10" height="30" rx="2" fill="#0b0d12" stroke="#7c5cff" stroke-width="1.2"/>
+    </svg>
+  </div>
+
   <p class="hero-eyebrow">Rakit PC · Cek Kompatibilitas · Konsultasi Gratis</p>
   <h1>Rakit PC impianmu, <span>tanpa salah komponen.</span></h1>
-  <p>Pilih CPU, motherboard, RAM, VGA, storage, PSU, casing, sampai monitor — sistem kami otomatis mengecek kecocokan dan memberi skor kekuatan rakitanmu. Harga & ketersediaan dikonfirmasi langsung oleh admin lewat WhatsApp.</p>
+  <p>Pilih CPU, motherboard, RAM, VGA, storage, PSU, casing, sampai monitor — sistem kami otomatis mengecek <span class="kw kw-cyan">kecocokan komponen</span> dan memberi <span class="kw kw-violet">Build Score</span> rakitanmu. Bisa pilih lebih dari satu RAM/VGA/storage sekaligus. Harga & ketersediaan dikonfirmasi langsung oleh admin lewat <span class="kw kw-ok">WhatsApp</span>.</p>
   <div class="hero-actions">
     <a href="builder.html" class="btn-primary">Mulai Rakit PC →</a>
     <a href="#kategori" class="btn-ghost">Lihat Kategori</a>
   </div>
-
-  <form class="hero-load-mini" id="indexLoadForm">
-    <input type="text" id="index-load-code" class="text-input" placeholder="Sudah punya kode rakitan? Tempel di sini">
-    <button type="submit" class="btn-ghost">Lanjutkan Rakitan →</button>
-  </form>
 </section>
 
 <p class="section-label">Kenapa Rakit Lewat Sini</p>
@@ -69,14 +92,14 @@
 
 <p class="section-label" id="kategori">Kategori Komponen</p>
 <div class="category-strip">
-  <a class="category-pill reveal" href="builder.html">Processor (CPU)</a>
-  <a class="category-pill reveal" href="builder.html">Motherboard</a>
-  <a class="category-pill reveal" href="builder.html">RAM</a>
-  <a class="category-pill reveal" href="builder.html">VGA Card</a>
-  <a class="category-pill reveal" href="builder.html">Storage</a>
-  <a class="category-pill reveal" href="builder.html">Power Supply</a>
-  <a class="category-pill reveal" href="builder.html">Casing</a>
-  <a class="category-pill reveal" href="builder.html">Monitor</a>
+  <a class="category-pill reveal" href="builder.html"><span class="cat-icon">🔲</span>Processor (CPU)</a>
+  <a class="category-pill reveal" href="builder.html"><span class="cat-icon">🧩</span>Motherboard</a>
+  <a class="category-pill reveal" href="builder.html"><span class="cat-icon">💾</span>RAM</a>
+  <a class="category-pill reveal" href="builder.html"><span class="cat-icon">🎮</span>VGA Card</a>
+  <a class="category-pill reveal" href="builder.html"><span class="cat-icon">💽</span>Storage</a>
+  <a class="category-pill reveal" href="builder.html"><span class="cat-icon">🔌</span>Power Supply</a>
+  <a class="category-pill reveal" href="builder.html"><span class="cat-icon">🖥️</span>Casing</a>
+  <a class="category-pill reveal" href="builder.html"><span class="cat-icon">🖵</span>Monitor</a>
 </div>
 
 <script src="js/animations.js"></script>
