@@ -89,15 +89,26 @@
 
     filterBarEl.innerHTML = groups
       .map((group) => {
-        const rawValues = Array.from(
-          new Set(XION_PRODUCTS.filter((p) => p.category === activeCat).map((p) => p[group.key]))
-        );
+        // cascading: opsi filter ini dihitung dari produk yang sudah
+        // disaring oleh filter LAIN yang aktif di kategori ini
+        let scoped = XION_PRODUCTS.filter((p) => p.category === activeCat);
+        groups.forEach((og) => {
+          if (og.key === group.key) return;
+          const val = filterState[og.key];
+          if (val && val !== "all") scoped = scoped.filter((p) => p[og.key] === val);
+        });
+        const rawValues = Array.from(new Set(scoped.map((p) => p[group.key])));
+
         // urutkan sesuai "order" kalau ada, sisanya (kalau ada nilai baru di luar daftar) ditaruh di belakang
         const ordered = group.order
           ? [...group.order.filter((v) => rawValues.includes(v)), ...rawValues.filter((v) => !group.order.includes(v))]
           : rawValues;
 
         if (!filterState[group.key]) filterState[group.key] = "all";
+        // kalau pilihan sebelumnya sudah tidak relevan (hasil filter lain berubah), reset ke "Semua"
+        if (filterState[group.key] !== "all" && !ordered.includes(filterState[group.key])) {
+          filterState[group.key] = "all";
+        }
         const current = filterState[group.key];
 
         const chips = ["all", ...ordered]
