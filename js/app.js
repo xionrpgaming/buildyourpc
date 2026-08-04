@@ -385,17 +385,86 @@ function renderSummary(){
   } else {
     const deg = Math.round(result.score/100*360);
     scoreWrap.innerHTML = `
-      <div class="score-gauge" style="--deg:${deg}deg">
-        <span class="score-num">${result.score}</span>
+      <div class="score-gauge" style="--deg:0deg">
+        <span class="score-num">0</span>
       </div>
       <div class="score-label">${result.label}</div>
       <ul class="score-notes">${result.notes.map(n=>`<li>${n}</li>`).join("")}</ul>
       <p class="score-disclaimer">*Skor estimasi internal berdasarkan tingkatan komponen &amp; konvensi umum komunitas PC builder, bukan harga.</p>
     `;
+    // animasi: gauge terisi + angka menghitung naik ke skor final
+    const gaugeEl = scoreWrap.querySelector(".score-gauge");
+    const numEl = scoreWrap.querySelector(".score-num");
+    requestAnimationFrame(()=>{ gaugeEl.style.setProperty("--deg", deg + "deg"); });
+    animateNumber(numEl, 0, result.score, 700);
   }
 
   // WA button state
   $("#wa-order-btn").disabled = items.length === 0;
+}
+
+/* ============================================================
+   KIRIM KODE RAKITAN VIA EMAIL (EmailJS)
+   ------------------------------------------------------------
+   Situs statis tidak bisa kirim email sendiri, jadi dipakai
+   EmailJS (https://www.emailjs.com — gratis s/d 200 email/bulan)
+   yang mengirim email langsung dari browser pengguna.
+
+   CARA SETUP (sekali saja):
+   1. Daftar gratis di https://www.emailjs.com
+   2. Email Services → Add New Service → hubungkan Gmail/Outlook
+      toko Anda → salin "Service ID" (contoh: service_abc123)
+   3. Email Templates → Create New Template. Isi:
+        - To Email   : {{to_email}}
+        - Subject    : Kode Rakitan PC Kamu - Xion Gaming
+        - Content    : pakai variable {{build_code}}, {{build_summary}},
+                        {{site_url}} di isi emailnya (boleh disusun bebas)
+      Simpan → salin "Template ID" (contoh: template_xyz789)
+   4. Account → General → salin "Public Key"
+   5. Tempel ketiga nilai itu di EMAILJS_CONFIG di bawah ini.
+
+   Selama EMAILJS_CONFIG belum diisi, tombol tetap berfungsi
+   (kode tetap dibuat & tampil di layar + tersimpan di perangkat
+   ini) — hanya bagian "kirim ke email" yang dilewati otomatis.
+   ============================================================ */
+const EMAILJS_CONFIG = {
+  publicKey: "YOUR_EMAILJS_PUBLIC_KEY",
+  serviceId: "YOUR_EMAILJS_SERVICE_ID",
+  templateId: "YOUR_EMAILJS_TEMPLATE_ID",
+};
+
+function isEmailJsConfigured(){
+  return EMAILJS_CONFIG.publicKey && !EMAILJS_CONFIG.publicKey.startsWith("YOUR_")
+    && EMAILJS_CONFIG.serviceId && !EMAILJS_CONFIG.serviceId.startsWith("YOUR_")
+    && EMAILJS_CONFIG.templateId && !EMAILJS_CONFIG.templateId.startsWith("YOUR_");
+}
+
+if(isEmailJsConfigured() && window.emailjs){
+  emailjs.init({ publicKey: EMAILJS_CONFIG.publicKey });
+}
+
+function buildEmailSummaryText(){
+  return allSelectedItems()
+    .map(({product,qty})=> `- ${product.name}${qty>1 ? ` (x${qty})` : ""}`)
+    .join("\n");
+}
+
+async function sendBuildCodeEmail(email, code){
+  if(!isEmailJsConfigured() || !window.emailjs){
+    return { sent:false, reason:"not-configured" };
+  }
+  try{
+    await emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, {
+      to_email: email,
+      build_code: code,
+      build_summary: buildEmailSummaryText(),
+      site_url: window.location.origin + window.location.pathname.replace(/builder\.html$/, "") + "builder.html?code=" + encodeURIComponent(code),
+    });
+    return { sent:true };
+  }catch(err){
+    console.error("EmailJS error:", err);
+    return { sent:false, reason:"send-failed" };
+  }
 }
 
 /* ---------- WHATSAPP ORDER ---------- */
@@ -410,7 +479,249 @@ function buildWaMessage(){
     lines.push("", `Estimasi Build Score: ${result.score}/100 (${result.label})`);
   }
   lines.push("", "Mohon info harga & ketersediaan untuk rakitan ini ya, terima kasih!");
+  if(items.length){
+    lines.push("", `Kode Build (simpan untuk cek ulang nanti): ${generateBuildCode()}`);
+  }
   return lines.join("\n");
+}
+
+/* ============================================================
+   SIMPAN / MUAT RAKITAN VIA KODE
+   ------------------------------------------------------------
+   Situs ini statis (GitHub Pages, tanpa server/database), jadi
+   "kode unik"-nya berisi rakitan itu sendiri (di-encode base64),
+   BUKAN sekadar nomor referensi. Karena itu kode ini bisa dimuat
+   ulang dari perangkat MANAPUN tanpa perlu server.
+   Email yang diisi saat menyimpan hanya disimpan sebagai label
+   lokal di browser ini (localStorage) & ikut ke pesan WhatsApp —
+   bukan dipakai untuk pencarian lintas-perangkat, karena situs
+   statis tidak punya tempat penyimpanan terpusat.
+   ============================================================ */
+const SAVED_BUILDS_KEY = "xion_saved_builds";
+
+function toBase64Url(str){
+  return btoa(unescape(encodeURIComponent(str))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+}
+function fromBase64Url(b64){
+  let s = b64.replace(/-/g,"+").replace(/_/g,"/");
+  while(s.length % 4) s += "=";
+  return decodeURIComponent(escape(atob(s)));
+}
+
+function generateBuildCode(){
+  const payload = { s: state.single, m: state.multi };
+  return "XG1-" + toBase64Url(JSON.stringify(payload));
+}
+
+function decodeBuildCode(raw){
+  try{
+    const trimmed = String(raw).trim();
+    const body = trimmed.startsWith("XG1-") ? trimmed.slice(4) : trimmed;
+    const payload = JSON.parse(fromBase64Url(body));
+    if(!payload || typeof payload !== "object") return null;
+
+    const single = {};
+    Object.entries(payload.s || {}).forEach(([cat,id])=>{
+      if(id && byId(id)) single[cat] = id;
+    });
+    const multi = { ram:{}, gpu:{}, storage:{} };
+    Object.entries(payload.m || {}).forEach(([cat,obj])=>{
+      if(!multi[cat]) multi[cat] = {};
+      Object.entries(obj || {}).forEach(([id,qty])=>{
+        if(byId(id) && qty > 0) multi[cat][id] = qty;
+      });
+    });
+    return { single, multi };
+  } catch(e){
+    return null;
+  }
+}
+
+function applyDecodedBuild(decoded){
+  state.single = decoded.single;
+  state.multi = decoded.multi;
+  renderAll();
+}
+
+function loadBuildFromCode(code){
+  const decoded = decodeBuildCode(code);
+  if(!decoded){
+    showToast("Kode tidak valid atau rusak.", "err");
+    return false;
+  }
+  const totalParts = Object.keys(decoded.single).length +
+    Object.values(decoded.multi).reduce((n,obj)=> n + Object.keys(obj).length, 0);
+  if(totalParts === 0){
+    showToast("Kode ini tidak berisi komponen apa pun.", "err");
+    return false;
+  }
+  applyDecodedBuild(decoded);
+  showToast("Rakitan berhasil dimuat ✓");
+  return true;
+}
+
+function getSavedBuilds(){
+  try{ return JSON.parse(localStorage.getItem(SAVED_BUILDS_KEY) || "[]"); }
+  catch(e){ return []; }
+}
+function persistSavedBuilds(list){
+  try{ localStorage.setItem(SAVED_BUILDS_KEY, JSON.stringify(list.slice(0,20))); }
+  catch(e){ /* localStorage tidak tersedia, lanjut tanpa persist */ }
+}
+function addSavedBuildRecord(code, email){
+  const list = getSavedBuilds().filter(r=>r.code!==code);
+  list.unshift({ code, email: email || "", savedAt: Date.now() });
+  persistSavedBuilds(list);
+}
+function removeSavedBuildRecord(code){
+  persistSavedBuilds(getSavedBuilds().filter(r=>r.code!==code));
+}
+
+function renderSavedBuildsList(){
+  const wrap = $("#saved-builds-list");
+  if(!wrap) return;
+  const list = getSavedBuilds();
+  if(!list.length){ wrap.innerHTML = ""; return; }
+  wrap.innerHTML = `<p class="saved-builds-title">Tersimpan di perangkat ini</p>` + list.map(r=>`
+    <div class="saved-build-item">
+      <button class="saved-build-load" data-code="${r.code}" type="button">
+        <span class="sb-email">${r.email ? r.email : "(tanpa email)"}</span>
+        <span class="sb-date">${new Date(r.savedAt).toLocaleDateString("id-ID")}</span>
+      </button>
+      <button class="saved-build-remove" data-code="${r.code}" type="button" aria-label="Hapus">✕</button>
+    </div>
+  `).join("");
+  wrap.querySelectorAll(".saved-build-load").forEach(btn=>{
+    btn.addEventListener("click", ()=> loadBuildFromCode(btn.dataset.code));
+  });
+  wrap.querySelectorAll(".saved-build-remove").forEach(btn=>{
+    btn.addEventListener("click", (e)=>{
+      e.stopPropagation();
+      removeSavedBuildRecord(btn.dataset.code);
+      renderSavedBuildsList();
+      showToast("Rakitan tersimpan dihapus dari perangkat ini");
+    });
+  });
+}
+
+/* ---------- Animasi angka menghitung naik (dipakai skor build) ---------- */
+function animateNumber(el, from, to, duration){
+  if(!el) return;
+  const start = performance.now();
+  function tick(now){
+    const progress = Math.min(1, (now - start) / duration);
+    const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+    el.textContent = Math.round(from + (to - from) * eased);
+    if(progress < 1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
+/* ---------- Toast notifikasi ringan ---------- */
+function showToast(msg, type){
+  let toast = document.getElementById("xg-toast");
+  if(!toast){
+    toast = document.createElement("div");
+    toast.id = "xg-toast";
+    toast.className = "xg-toast";
+    document.body.appendChild(toast);
+  }
+  toast.textContent = msg;
+  toast.className = "xg-toast show" + (type ? " " + type : "");
+  clearTimeout(toast._hideTimer);
+  toast._hideTimer = setTimeout(()=> toast.classList.remove("show"), 2800);
+}
+
+function initSaveLoad(){
+  const saveBtn = $("#save-build-btn");
+  const saveForm = $("#save-build-form");
+  const saveConfirm = $("#save-build-confirm");
+  const saveResult = $("#save-build-result");
+  const codeOutput = $("#save-code-output");
+  const copyBtn = $("#copy-code-btn");
+  const emailInput = $("#save-email-input");
+
+  if(saveBtn){
+    saveBtn.addEventListener("click", ()=>{
+      if(allSelectedItems().length === 0){
+        showToast("Pilih minimal 1 komponen dulu.", "err");
+        return;
+      }
+      saveForm.classList.toggle("hidden");
+    });
+  }
+
+  if(saveConfirm){
+    saveConfirm.addEventListener("click", async ()=>{
+      const email = emailInput.value.trim();
+      if(!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+        showToast("Masukkan email yang valid dulu.", "err");
+        return;
+      }
+      const code = generateBuildCode();
+      addSavedBuildRecord(code, email);
+      codeOutput.value = code;
+      saveResult.classList.remove("hidden");
+      saveForm.classList.add("hidden");
+      renderSavedBuildsList();
+
+      const resultHint = $("#save-result-hint");
+      const originalLabel = saveConfirm.textContent;
+      saveConfirm.disabled = true;
+      saveConfirm.textContent = "Mengirim...";
+      showToast("Membuat kode & mengirim ke email...");
+
+      const result = await sendBuildCodeEmail(email, code);
+      saveConfirm.disabled = false;
+      saveConfirm.textContent = originalLabel;
+
+      if(result.sent){
+        showToast("Kode terkirim ke email kamu ✓");
+        if(resultHint) resultHint.textContent = `Kode ini sudah dikirim ke ${email}. Masukkan lagi kapan saja di kolom "Muat Rakitan" untuk melanjutkan — dari perangkat manapun.`;
+      } else if(result.reason === "not-configured"){
+        showToast("Kode dibuat ✓ (pengiriman email belum di-setup admin)", "err");
+        if(resultHint) resultHint.textContent = `Kode berhasil dibuat, tapi pengiriman otomatis ke email belum aktif di situs ini. Salin & simpan kode ini secara manual dulu.`;
+      } else {
+        showToast("Kode dibuat, tapi gagal terkirim ke email. Salin manual ya.", "err");
+        if(resultHint) resultHint.textContent = `Kode berhasil dibuat, tapi pengiriman ke email gagal (cek koneksi/coba lagi). Salin & simpan kode ini secara manual dulu.`;
+      }
+    });
+  }
+
+  if(copyBtn){
+    copyBtn.addEventListener("click", async ()=>{
+      try{
+        await navigator.clipboard.writeText(codeOutput.value);
+        showToast("Kode disalin ke clipboard ✓");
+      }catch(e){
+        codeOutput.removeAttribute("readonly");
+        codeOutput.select();
+        document.execCommand("copy");
+        codeOutput.setAttribute("readonly","");
+        showToast("Kode disalin ✓");
+      }
+    });
+  }
+
+  [["#load-code-btn","#load-code-input"], ["#load-code-btn-top","#load-code-input-top"]].forEach(([btnSel,inputSel])=>{
+    const btn = $(btnSel), input = $(inputSel);
+    if(!btn || !input) return;
+    btn.addEventListener("click", ()=>{
+      if(!input.value.trim()){ showToast("Masukkan kode rakitan dulu.", "err"); return; }
+      loadBuildFromCode(input.value.trim());
+    });
+    input.addEventListener("keydown", (e)=>{
+      if(e.key === "Enter"){ e.preventDefault(); btn.click(); }
+    });
+  });
+
+  renderSavedBuildsList();
+
+  // auto-load kalau ada ?code=... di URL (dari link index.html atau dibagikan langsung)
+  const urlCode = new URLSearchParams(window.location.search).get("code");
+  if(urlCode){
+    loadBuildFromCode(urlCode);
+  }
 }
 
 function initWaButton(){
@@ -442,4 +753,5 @@ document.addEventListener("DOMContentLoaded", ()=>{
   renderAll();
   initWaButton();
   initResetButton();
+  initSaveLoad();
 });
