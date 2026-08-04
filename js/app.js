@@ -31,12 +31,20 @@
 
   let selected = loadState(); // { [categoryKey]: productId }
   let activeCat = "cpu";
-  let activeFilters = {}; // { [categoryKey]: filterValue | "all" }
+  let activeFilters = {}; // { [categoryKey]: { [filterKey]: value | "all" } }
 
   // cat dari query string ?cat=gpu
   const params = new URLSearchParams(window.location.search);
   if (params.get("cat") && XION_CATEGORIES.some((c) => c.key === params.get("cat"))) {
     activeCat = params.get("cat");
+  }
+
+  function getFilterGroups(cat) {
+    return XION_FILTERS[cat] || [];
+  }
+  function getCatFilterState(cat) {
+    if (!activeFilters[cat]) activeFilters[cat] = {};
+    return activeFilters[cat];
   }
 
   // ---- render: tabs kategori ----
@@ -67,71 +75,82 @@
     });
   }
 
-  // ---- render: filter chip berdasarkan atribut cluster kategori aktif ----
+  // ---- render: satu atau lebih baris filter chip untuk kategori aktif ----
   const filterBarEl = document.getElementById("filterBar");
   function renderFilters() {
     if (!filterBarEl) return;
-    const filterDef = XION_FILTERS[activeCat];
-    if (!filterDef) {
+    const groups = getFilterGroups(activeCat);
+    const filterState = getCatFilterState(activeCat);
+
+    if (groups.length === 0) {
       filterBarEl.innerHTML = "";
       return;
     }
 
-    const values = Array.from(
-      new Set(
-        XION_PRODUCTS.filter((p) => p.category === activeCat).map((p) => p[filterDef.key])
-      )
-    );
+    filterBarEl.innerHTML = groups
+      .map((group) => {
+        const rawValues = Array.from(
+          new Set(XION_PRODUCTS.filter((p) => p.category === activeCat).map((p) => p[group.key]))
+        );
+        // urutkan sesuai "order" kalau ada, sisanya (kalau ada nilai baru di luar daftar) ditaruh di belakang
+        const ordered = group.order
+          ? [...group.order.filter((v) => rawValues.includes(v)), ...rawValues.filter((v) => !group.order.includes(v))]
+          : rawValues;
 
-    if (!activeFilters[activeCat]) activeFilters[activeCat] = "all";
-    const current = activeFilters[activeCat];
+        if (!filterState[group.key]) filterState[group.key] = "all";
+        const current = filterState[group.key];
 
-    const chips = ["all", ...values]
-      .map((val) => {
-        const label = val === "all" ? "Semua" : val;
-        const isActive = current === val;
-        return `<button type="button" class="filter-chip ${isActive ? "is-active" : ""}" data-val="${val}">${label}</button>`;
+        const chips = ["all", ...ordered]
+          .map((val) => {
+            const label = val === "all" ? "Semua" : val;
+            const isActive = current === val;
+            return `<button type="button" class="filter-chip ${isActive ? "is-active" : ""}" data-key="${group.key}" data-val="${val}">${label}</button>`;
+          })
+          .join("");
+
+        return `
+          <div class="filter-row">
+            <span class="filter-label">${group.label}:</span>
+            <div class="filter-chips">${chips}</div>
+          </div>
+        `;
       })
       .join("");
 
-    filterBarEl.innerHTML = `
-      <span class="filter-label">${filterDef.label}:</span>
-      <div class="filter-chips">${chips}</div>
-    `;
-
     filterBarEl.querySelectorAll(".filter-chip").forEach((btn) => {
       btn.addEventListener("click", () => {
-        activeFilters[activeCat] = btn.dataset.val;
+        filterState[btn.dataset.key] = btn.dataset.val;
         renderFilters();
         renderProducts();
       });
     });
   }
 
-  // ---- render: grid produk untuk kategori + filter aktif ----
+  // ---- render: grid produk untuk kategori + semua filter aktif (AND) ----
   const productGridEl = document.getElementById("productGrid");
   function renderProducts() {
     if (!productGridEl) return;
-    const filterDef = XION_FILTERS[activeCat];
-    const currentFilter = activeFilters[activeCat] || "all";
+    const groups = getFilterGroups(activeCat);
+    const filterState = getCatFilterState(activeCat);
 
     let items = XION_PRODUCTS.filter((p) => p.category === activeCat);
-    if (filterDef && currentFilter !== "all") {
-      items = items.filter((p) => p[filterDef.key] === currentFilter);
-    }
+    groups.forEach((group) => {
+      const val = filterState[group.key] || "all";
+      if (val !== "all") items = items.filter((p) => p[group.key] === val);
+    });
 
     if (items.length === 0) {
-      productGridEl.innerHTML = `<p class="empty-state">Tidak ada produk untuk filter ini.</p>`;
+      productGridEl.innerHTML = `<p class="empty-state">Tidak ada produk untuk kombinasi filter ini.</p>`;
       return;
     }
 
     productGridEl.innerHTML = items
       .map((p) => {
         const isSelected = selected[activeCat] === p.id;
-        const tag = filterDef ? p[filterDef.key] : null;
+        const tags = groups.map((g) => p[g.key]).filter(Boolean);
         return `
           <article class="product-card ${isSelected ? "is-selected" : ""}">
-            ${tag ? `<span class="tag">${tag}</span>` : ""}
+            <div class="tag-row">${tags.map((t) => `<span class="tag">${t}</span>`).join("")}</div>
             <h4>${p.name}</h4>
             <p class="spec">${p.spec}</p>
             <p class="price">${formatRupiah(p.price)}</p>
