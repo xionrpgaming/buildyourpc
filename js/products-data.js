@@ -27,23 +27,31 @@
      - cpu.tdp / gpu.tdp     -> estimasi kebutuhan watt PSU
      - tier (1-5)            -> Build Score & rekomendasi monitor
 
-   =========================== CATATAN MIGRASI — MOHON DICEK ===========================
-   1. tier dihitung OTOMATIS dari urutan harga lama (quintile), bukan dinilai manual
-      per produk. Umumnya akurat, tapi kalau ada yang terasa janggal (mis. produk
-      lama Anda tahu persis levelnya), tinggal ubah angka tier (1-5) manual di
-      barisnya masing-masing.
-   2. tdp (CPU & GPU) SAYA ISI berdasarkan spek umum tipe tersebut di pasaran
-      (bukan dari data lama Anda, karena data lama tidak punya field ini). Cek lagi
-      terutama untuk model yang jarang / edge-case.
-   3. GAP DATA yang ditemukan saat migrasi (bukan salah migrasi, tapi memang belum
-      ada padanannya di data lama Anda):
-        - Casing "Mini-ITX Compact" (case-01) mendukung form factor ITX, TAPI tidak
-          ada satupun motherboard ITX di data lama Anda (semua Micro-ATX/ATX/E-ATX).
-          Kalau memang jual mobo ITX, tambahkan produknya biar match.
-        - Motherboard "H81M" (mobo-11, LGA1150) pakai DDR3, tapi tidak ada produk
-          RAM DDR3 di data lama Anda — builder akan menampilkan H81M tapi RAM-nya
-          tidak akan ada yang cocok sampai Anda tambahkan RAM DDR3.
-   =======================================================================================
+   =========================== CATATAN UPDATE TERBARU ===========================
+   Update lanjutan (setelah migrasi awal) menambah varian yang tadinya belum
+   lengkap, disusun dari data resmi AMD/Intel/NVIDIA per pertengahan 2026:
+     - CPU: tambah APU Ryzen 8000G, Ryzen 9000 non-X/X3D lengkap (9600X,
+       9800X3D, 9900X, 9950X3D), Ryzen 5000 non-X3D tambahan (5500/5900X/
+       5950X di AM4), serta Core Ultra 200S tambahan (Ultra 5 235 non-K,
+       Ultra 9 285K).
+     - Motherboard: tambah varian Mini-ITX untuk AM5, LGA1700, & LGA1851
+       (menutup gap "casing ITX tanpa mobo ITX" yang dilaporkan sebelumnya),
+       plus chipset terbaru X870E, B850, A620M.
+     - RAM: tambah DDR3 (menutup gap motherboard H81M/LGA1150 yang sebelumnya
+       tidak punya RAM cocok), plus kit DDR5 8000MHz kelas enthusiast.
+     - GPU: lengkapi seri RTX 50 (5050, 5060 Ti 8/16GB, 5090), tambah Radeon
+       RX 9000 (RDNA 4 — 9060, 9060 XT 8/16GB, 9070, 9070 XT), dan tambah
+       brand baru Intel Arc (A750, A770, B570, B580).
+     - Storage: tambah NVMe Gen5 2TB, SATA SSD 2TB, HDD 8TB.
+     - PSU: tambah entry-level 400W 80+ White.
+     - Casing & Monitor: tambah beberapa varian (Micro-ATX RGB, Mid Tower
+       silent, monitor 22"/240Hz/OLED/curved) untuk pilihan lebih lengkap.
+
+   tier tetap berupa estimasi 1-5 (dulu dihitung dari urutan harga data lama,
+   produk baru di atas saya beri tier manual selaras dengan level performanya).
+   tdp diisi dari spek umum tipe tersebut di pasaran, bukan diukur langsung —
+   cek ulang kalau Anda punya data resmi yang lebih presisi.
+   ================================================================================
    ============================================================ */
 
 const PRODUCTS = [
@@ -54,14 +62,25 @@ const PRODUCTS = [
   { id:"cpu-04", category:"cpu", brand:"AMD", name:"AMD Ryzen 7 3700X", spec:"8 Core / 16 Thread, 3.6GHz base", socket:"AM4", generation:"Ryzen 3000", tdp:65, tier:2, stock:true },
   { id:"cpu-05", category:"cpu", brand:"AMD", name:"AMD Ryzen 5 5600", spec:"6 Core / 12 Thread, 3.5GHz base", socket:"AM4", generation:"Ryzen 5000", tdp:65, tier:2, stock:true },
   { id:"cpu-06", category:"cpu", brand:"AMD", name:"AMD Ryzen 7 5700X3D", spec:"8 Core / 16 Thread, 3D V-Cache", socket:"AM4", generation:"Ryzen 5000", tdp:105, tier:3, stock:true },
+  { id:"cpu-06b", category:"cpu", brand:"AMD", name:"AMD Ryzen 5 5500", spec:"6 Core / 12 Thread, 3.6GHz base", socket:"AM4", generation:"Ryzen 5000", tdp:65, tier:1, stock:true },
+  { id:"cpu-06c", category:"cpu", brand:"AMD", name:"AMD Ryzen 9 5900X", spec:"12 Core / 24 Thread, 3.7GHz base", socket:"AM4", generation:"Ryzen 5000", tdp:105, tier:4, stock:true },
+  { id:"cpu-06d", category:"cpu", brand:"AMD", name:"AMD Ryzen 9 5950X", spec:"16 Core / 32 Thread, 3.4GHz base", socket:"AM4", generation:"Ryzen 5000", tdp:105, tier:5, stock:true },
   { id:"cpu-07", category:"cpu", brand:"AMD", name:"AMD Ryzen 5 7600", spec:"6 Core / 12 Thread, 3.8GHz base", socket:"AM5", generation:"Ryzen 7000", tdp:65, tier:3, stock:true },
   { id:"cpu-08", category:"cpu", brand:"AMD", name:"AMD Ryzen 7 7700X", spec:"8 Core / 16 Thread, 4.5GHz base", socket:"AM5", generation:"Ryzen 7000", tdp:105, tier:4, stock:true },
+  { id:"cpu-08b", category:"cpu", brand:"AMD", name:"AMD Ryzen 5 8500G", spec:"6 Core / 12 Thread, Radeon 740M iGPU", socket:"AM5", generation:"Ryzen 8000G", tdp:65, tier:2, stock:true },
+  { id:"cpu-08c", category:"cpu", brand:"AMD", name:"AMD Ryzen 5 8600G", spec:"6 Core / 12 Thread, Radeon 760M iGPU", socket:"AM5", generation:"Ryzen 8000G", tdp:65, tier:3, stock:true },
   { id:"cpu-09", category:"cpu", brand:"AMD", name:"AMD Ryzen 7 9700X", spec:"8 Core / 16 Thread, 3.8GHz base", socket:"AM5", generation:"Ryzen 9000", tdp:65, tier:5, stock:true },
+  { id:"cpu-09b", category:"cpu", brand:"AMD", name:"AMD Ryzen 5 9600X", spec:"6 Core / 12 Thread, 3.9GHz base", socket:"AM5", generation:"Ryzen 9000", tdp:65, tier:4, stock:true },
+  { id:"cpu-09c", category:"cpu", brand:"AMD", name:"AMD Ryzen 7 9800X3D", spec:"8 Core / 16 Thread, 3D V-Cache", socket:"AM5", generation:"Ryzen 9000", tdp:120, tier:5, stock:true },
+  { id:"cpu-09d", category:"cpu", brand:"AMD", name:"AMD Ryzen 9 9900X", spec:"12 Core / 24 Thread, 4.4GHz base", socket:"AM5", generation:"Ryzen 9000", tdp:120, tier:5, stock:true },
   { id:"cpu-10", category:"cpu", brand:"AMD", name:"AMD Ryzen 9 9950X", spec:"16 Core / 32 Thread, 4.3GHz base", socket:"AM5", generation:"Ryzen 9000", tdp:170, tier:5, stock:true },
+  { id:"cpu-10b", category:"cpu", brand:"AMD", name:"AMD Ryzen 9 9950X3D", spec:"16 Core / 32 Thread, 3D V-Cache", socket:"AM5", generation:"Ryzen 9000", tdp:170, tier:5, stock:true },
   { id:"cpu-11", category:"cpu", brand:"AMD", name:"AMD Threadripper 7960X", spec:"24 Core / 48 Thread, HEDT", socket:"sTR5", generation:"Threadripper 7000", tdp:350, tier:5, stock:true },
-  { id:"cpu-12", category:"cpu", brand:"AMD", name:"AMD Threadripper 7980X", spec:"64 Core / 128 Thread, HEDT", socket:"sTR5", generation:"Threadripper 7000", tdp:350, tier:5, stock:true },
-  { id:"cpu-13", category:"cpu", brand:"Intel", name:"Intel Core Ultra 5 245K", spec:"14 Core / 14 Thread", socket:"LGA1851", generation:"Core Ultra 200", tdp:125, tier:4, stock:true },
+  { id:"cpu-12", category:"cpu", brand:"AMD", name:"AMD Threadripper 7980X", spec:"64 Core / 128 Thread, HEDT", socket:"sTR5", generation:"Threadripper 7000", tdp:350, tier:5, stock:false },
+  { id:"cpu-13", category:"cpu", brand:"Intel", name:"Intel Core Ultra 5 235", spec:"14 Core / 14 Thread, non-K", socket:"LGA1851", generation:"Core Ultra 200", tdp:65, tier:3, stock:true },
+  { id:"cpu-13b", category:"cpu", brand:"Intel", name:"Intel Core Ultra 5 245K", spec:"14 Core / 14 Thread", socket:"LGA1851", generation:"Core Ultra 200", tdp:125, tier:4, stock:true },
   { id:"cpu-14", category:"cpu", brand:"Intel", name:"Intel Core Ultra 7 265K", spec:"20 Core / 20 Thread", socket:"LGA1851", generation:"Core Ultra 200", tdp:125, tier:5, stock:true },
+  { id:"cpu-14b", category:"cpu", brand:"Intel", name:"Intel Core Ultra 9 285K", spec:"24 Core / 24 Thread", socket:"LGA1851", generation:"Core Ultra 200", tdp:125, tier:5, stock:true },
   { id:"cpu-15", category:"cpu", brand:"Intel", name:"Intel Core i5-12400F", spec:"6 Core / 12 Thread, 2.5GHz base", socket:"LGA1700", generation:"Core Gen 12", tdp:65, tier:3, stock:true },
   { id:"cpu-16", category:"cpu", brand:"Intel", name:"Intel Core i7-12700K", spec:"12 Core / 20 Thread", socket:"LGA1700", generation:"Core Gen 12", tdp:125, tier:4, stock:true },
   { id:"cpu-17", category:"cpu", brand:"Intel", name:"Intel Core i5-13400F", spec:"10 Core / 16 Thread", socket:"LGA1700", generation:"Core Gen 13", tdp:65, tier:3, stock:true },
@@ -78,13 +97,19 @@ const PRODUCTS = [
 
   // ================= MOTHERBOARD =================
   { id:"mobo-01", category:"motherboard", brand:"AMD", name:"B650M", spec:"Micro-ATX, DDR5, PCIe 4.0", socket:"AM5", memoryType:"DDR5", formFactor:"MicroATX", tier:3, stock:true },
+  { id:"mobo-01b", category:"motherboard", brand:"AMD", name:"B650I", spec:"Mini-ITX, DDR5, PCIe 4.0", socket:"AM5", memoryType:"DDR5", formFactor:"ITX", tier:3, stock:true },
+  { id:"mobo-01c", category:"motherboard", brand:"AMD", name:"A620M", spec:"Micro-ATX, DDR5, entry-level", socket:"AM5", memoryType:"DDR5", formFactor:"MicroATX", tier:1, stock:true },
+  { id:"mobo-01d", category:"motherboard", brand:"AMD", name:"B850", spec:"ATX, DDR5, PCIe 5.0", socket:"AM5", memoryType:"DDR5", formFactor:"ATX", tier:3, stock:true },
   { id:"mobo-02", category:"motherboard", brand:"AMD", name:"X670E", spec:"ATX, DDR5, PCIe 5.0", socket:"AM5", memoryType:"DDR5", formFactor:"ATX", tier:4, stock:true },
+  { id:"mobo-02b", category:"motherboard", brand:"AMD", name:"X870E", spec:"ATX, DDR5, PCIe 5.0, USB4", socket:"AM5", memoryType:"DDR5", formFactor:"ATX", tier:5, stock:true },
   { id:"mobo-03", category:"motherboard", brand:"AMD", name:"A520M", spec:"Micro-ATX, DDR4", socket:"AM4", memoryType:"DDR4", formFactor:"MicroATX", tier:1, stock:true },
   { id:"mobo-04", category:"motherboard", brand:"AMD", name:"B550M", spec:"Micro-ATX, DDR4, PCIe 4.0", socket:"AM4", memoryType:"DDR4", formFactor:"MicroATX", tier:2, stock:true },
   { id:"mobo-05", category:"motherboard", brand:"AMD", name:"TRX50", spec:"E-ATX, DDR5, HEDT", socket:"sTR5", memoryType:"DDR5", formFactor:"EATX", tier:5, stock:true },
   { id:"mobo-06", category:"motherboard", brand:"Intel", name:"Z890", spec:"ATX, DDR5, WiFi 7", socket:"LGA1851", memoryType:"DDR5", formFactor:"ATX", tier:5, stock:true },
   { id:"mobo-07", category:"motherboard", brand:"Intel", name:"B660M", spec:"Micro-ATX, DDR4", socket:"LGA1700", memoryType:"DDR4", formFactor:"MicroATX", tier:3, stock:true },
   { id:"mobo-08", category:"motherboard", brand:"Intel", name:"Z790", spec:"ATX, DDR5, WiFi 6", socket:"LGA1700", memoryType:"DDR5", formFactor:"ATX", tier:4, stock:true },
+  { id:"mobo-08b", category:"motherboard", brand:"Intel", name:"B760I", spec:"Mini-ITX, DDR5", socket:"LGA1700", memoryType:"DDR5", formFactor:"ITX", tier:3, stock:true },
+  { id:"mobo-06b", category:"motherboard", brand:"Intel", name:"Z890I", spec:"Mini-ITX, DDR5, WiFi 7", socket:"LGA1851", memoryType:"DDR5", formFactor:"ITX", tier:5, stock:true },
   { id:"mobo-09", category:"motherboard", brand:"Intel", name:"B560M", spec:"Micro-ATX, DDR4", socket:"LGA1200", memoryType:"DDR4", formFactor:"MicroATX", tier:2, stock:true },
   { id:"mobo-10", category:"motherboard", brand:"Intel", name:"B365M", spec:"Micro-ATX, DDR4", socket:"LGA1151", memoryType:"DDR4", formFactor:"MicroATX", tier:1, stock:true },
   { id:"mobo-11", category:"motherboard", brand:"Intel", name:"H81M", spec:"Micro-ATX, DDR3", socket:"LGA1150", memoryType:"DDR3", formFactor:"MicroATX", tier:1, stock:true },
@@ -104,6 +129,10 @@ const PRODUCTS = [
   { id:"ram-12", category:"ram", brand:"Gaming", name:"DDR5 32GB Kit OC", spec:"2x16GB, CL38, Dual Channel, 6400MHz", memoryType:"DDR5", capacity:32, speed:"6400MHz", tier:4, stock:true, qtyMax:4 },
   { id:"ram-13", category:"ram", brand:"Gaming", name:"DDR5 64GB Kit", spec:"2x32GB, CL36, Dual Channel, 6000MHz", memoryType:"DDR5", capacity:64, speed:"6000MHz", tier:5, stock:true, qtyMax:4 },
   { id:"ram-14", category:"ram", brand:"Gaming", name:"DDR5 64GB Kit OC", spec:"2x32GB, CL38, Dual Channel, 6400MHz", memoryType:"DDR5", capacity:64, speed:"6400MHz", tier:5, stock:true, qtyMax:4 },
+  { id:"ram-15", category:"ram", brand:"Enthusiast", name:"DDR5 32GB Kit Extreme", spec:"2x16GB, CL34, Dual Channel, 8000MHz", memoryType:"DDR5", capacity:32, speed:"8000MHz", tier:5, stock:true, qtyMax:4 },
+  // -- DDR3 (untuk motherboard legacy seperti H81M/LGA1150) --
+  { id:"ram-16", category:"ram", brand:"Value", name:"DDR3 8GB", spec:"1x8GB, CL11, Single Channel, 1600MHz", memoryType:"DDR3", capacity:8, speed:"1600MHz", tier:1, stock:true, qtyMax:4 },
+  { id:"ram-17", category:"ram", brand:"Value", name:"DDR3 16GB Kit", spec:"2x8GB, CL11, Dual Channel, 1600MHz", memoryType:"DDR3", capacity:16, speed:"1600MHz", tier:1, stock:true, qtyMax:4 },
 
   // ================= GPU =================
   { id:"gpu-01", category:"gpu", brand:"NVIDIA", name:"GeForce GTX 950 2GB", spec:"2GB GDDR5, 128-bit", series:"GTX 900", tdp:90, vram:2, tier:1, stock:true, qtyMax:2 },
@@ -127,22 +156,38 @@ const PRODUCTS = [
   { id:"gpu-19", category:"gpu", brand:"NVIDIA", name:"GeForce RTX 3070 8GB", spec:"8GB GDDR6, Ray Tracing Gen 2", series:"RTX 30", tdp:220, vram:8, tier:3, stock:true, qtyMax:2 },
   { id:"gpu-20", category:"gpu", brand:"NVIDIA", name:"GeForce RTX 3080 10GB", spec:"10GB GDDR6X, Ray Tracing Gen 2", series:"RTX 30", tdp:320, vram:10, tier:4, stock:true, qtyMax:2 },
   { id:"gpu-21", category:"gpu", brand:"NVIDIA", name:"GeForce RTX 3090 24GB", spec:"24GB GDDR6X, Ray Tracing Gen 2", series:"RTX 30", tdp:350, vram:24, tier:5, stock:true, qtyMax:2 },
+  { id:"gpu-21b", category:"gpu", brand:"NVIDIA", name:"GeForce RTX 3060 Ti 8GB", spec:"8GB GDDR6, Ray Tracing Gen 2", series:"RTX 30", tdp:200, vram:8, tier:3, stock:true, qtyMax:2 },
   { id:"gpu-22", category:"gpu", brand:"NVIDIA", name:"GeForce RTX 4060 8GB", spec:"8GB GDDR6, DLSS 3", series:"RTX 40", tdp:115, vram:8, tier:3, stock:true, qtyMax:2 },
   { id:"gpu-23", category:"gpu", brand:"NVIDIA", name:"GeForce RTX 4060 Ti 8GB", spec:"8GB GDDR6, DLSS 3", series:"RTX 40", tdp:160, vram:8, tier:4, stock:true, qtyMax:2 },
   { id:"gpu-24", category:"gpu", brand:"NVIDIA", name:"GeForce RTX 4070 12GB", spec:"12GB GDDR6X, DLSS 3", series:"RTX 40", tdp:200, vram:12, tier:4, stock:true, qtyMax:2 },
   { id:"gpu-25", category:"gpu", brand:"NVIDIA", name:"GeForce RTX 4070 Ti Super 16GB", spec:"16GB GDDR6X, DLSS 3", series:"RTX 40", tdp:285, vram:16, tier:5, stock:true, qtyMax:2 },
   { id:"gpu-26", category:"gpu", brand:"NVIDIA", name:"GeForce RTX 4080 Super 16GB", spec:"16GB GDDR6X, DLSS 3", series:"RTX 40", tdp:320, vram:16, tier:5, stock:true, qtyMax:2 },
   { id:"gpu-27", category:"gpu", brand:"NVIDIA", name:"GeForce RTX 4090 24GB", spec:"24GB GDDR6X, DLSS 3", series:"RTX 40", tdp:450, vram:24, tier:5, stock:true, qtyMax:2 },
+  { id:"gpu-27b", category:"gpu", brand:"NVIDIA", name:"GeForce RTX 5050 8GB", spec:"8GB GDDR6, DLSS 4", series:"RTX 50", tdp:130, vram:8, tier:3, stock:true, qtyMax:2 },
   { id:"gpu-28", category:"gpu", brand:"NVIDIA", name:"GeForce RTX 5060 8GB", spec:"8GB GDDR7, DLSS 4", series:"RTX 50", tdp:145, vram:8, tier:4, stock:true, qtyMax:2 },
+  { id:"gpu-28b", category:"gpu", brand:"NVIDIA", name:"GeForce RTX 5060 Ti 8GB", spec:"8GB GDDR7, DLSS 4", series:"RTX 50", tdp:180, vram:8, tier:4, stock:true, qtyMax:2 },
+  { id:"gpu-28c", category:"gpu", brand:"NVIDIA", name:"GeForce RTX 5060 Ti 16GB", spec:"16GB GDDR7, DLSS 4", series:"RTX 50", tdp:180, vram:16, tier:4, stock:true, qtyMax:2 },
   { id:"gpu-29", category:"gpu", brand:"NVIDIA", name:"GeForce RTX 5070 12GB", spec:"12GB GDDR7, DLSS 4", series:"RTX 50", tdp:250, vram:12, tier:4, stock:true, qtyMax:2 },
   { id:"gpu-30", category:"gpu", brand:"NVIDIA", name:"GeForce RTX 5070 Ti 16GB", spec:"16GB GDDR7, DLSS 4", series:"RTX 50", tdp:300, vram:16, tier:5, stock:true, qtyMax:2 },
   { id:"gpu-31", category:"gpu", brand:"NVIDIA", name:"GeForce RTX 5080 16GB", spec:"16GB GDDR7, DLSS 4", series:"RTX 50", tdp:360, vram:16, tier:5, stock:true, qtyMax:2 },
+  { id:"gpu-31b", category:"gpu", brand:"NVIDIA", name:"GeForce RTX 5090 32GB", spec:"32GB GDDR7, DLSS 4", series:"RTX 50", tdp:575, vram:32, tier:5, stock:true, qtyMax:2 },
   { id:"gpu-32", category:"gpu", brand:"AMD", name:"Radeon RX 6600 8GB", spec:"8GB GDDR6, 128-bit", series:"Radeon RX 6000", tdp:132, vram:8, tier:3, stock:true, qtyMax:2 },
   { id:"gpu-33", category:"gpu", brand:"AMD", name:"Radeon RX 6700 XT 12GB", spec:"12GB GDDR6, 192-bit", series:"Radeon RX 6000", tdp:230, vram:12, tier:3, stock:true, qtyMax:2 },
   { id:"gpu-34", category:"gpu", brand:"AMD", name:"Radeon RX 6800 XT 16GB", spec:"16GB GDDR6, 256-bit", series:"Radeon RX 6000", tdp:300, vram:16, tier:4, stock:true, qtyMax:2 },
   { id:"gpu-35", category:"gpu", brand:"AMD", name:"Radeon RX 7600 8GB", spec:"8GB GDDR6, 128-bit", series:"Radeon RX 7000", tdp:165, vram:8, tier:3, stock:true, qtyMax:2 },
   { id:"gpu-36", category:"gpu", brand:"AMD", name:"Radeon RX 7800 XT 16GB", spec:"16GB GDDR6, 256-bit", series:"Radeon RX 7000", tdp:263, vram:16, tier:4, stock:true, qtyMax:2 },
   { id:"gpu-37", category:"gpu", brand:"AMD", name:"Radeon RX 7900 XTX 24GB", spec:"24GB GDDR6, 384-bit", series:"Radeon RX 7000", tdp:355, vram:24, tier:5, stock:true, qtyMax:2 },
+  // -- Radeon RX 9000 (RDNA 4, terbaru 2026) --
+  { id:"gpu-38", category:"gpu", brand:"AMD", name:"Radeon RX 9060 8GB", spec:"8GB GDDR6, RDNA 4", series:"Radeon RX 9000", tdp:150, vram:8, tier:3, stock:true, qtyMax:2 },
+  { id:"gpu-39", category:"gpu", brand:"AMD", name:"Radeon RX 9060 XT 8GB", spec:"8GB GDDR6, RDNA 4", series:"Radeon RX 9000", tdp:150, vram:8, tier:4, stock:true, qtyMax:2 },
+  { id:"gpu-40", category:"gpu", brand:"AMD", name:"Radeon RX 9060 XT 16GB", spec:"16GB GDDR6, RDNA 4", series:"Radeon RX 9000", tdp:150, vram:16, tier:4, stock:true, qtyMax:2 },
+  { id:"gpu-41", category:"gpu", brand:"AMD", name:"Radeon RX 9070 16GB", spec:"16GB GDDR6, RDNA 4", series:"Radeon RX 9000", tdp:220, vram:16, tier:4, stock:true, qtyMax:2 },
+  { id:"gpu-42", category:"gpu", brand:"AMD", name:"Radeon RX 9070 XT 16GB", spec:"16GB GDDR6, RDNA 4", series:"Radeon RX 9000", tdp:304, vram:16, tier:5, stock:true, qtyMax:2 },
+  // -- Intel Arc (Alchemist & Battlemage) --
+  { id:"gpu-43", category:"gpu", brand:"Intel", name:"Arc A750 8GB", spec:"8GB GDDR6, Alchemist", series:"Arc A-Series", tdp:225, vram:8, tier:2, stock:true, qtyMax:2 },
+  { id:"gpu-44", category:"gpu", brand:"Intel", name:"Arc A770 16GB", spec:"16GB GDDR6, Alchemist", series:"Arc A-Series", tdp:225, vram:16, tier:3, stock:true, qtyMax:2 },
+  { id:"gpu-45", category:"gpu", brand:"Intel", name:"Arc B570 10GB", spec:"10GB GDDR6, Battlemage", series:"Arc B-Series", tdp:150, vram:10, tier:3, stock:true, qtyMax:2 },
+  { id:"gpu-46", category:"gpu", brand:"Intel", name:"Arc B580 12GB", spec:"12GB GDDR6, Battlemage", series:"Arc B-Series", tdp:190, vram:12, tier:3, stock:true, qtyMax:2 },
 
   // ================= STORAGE =================
   { id:"sto-01", category:"storage", brand:"Value", name:"NVMe SSD 500GB", spec:"PCIe 3.0, up to 3500MB/s", type:"SSD-NVMe", capacity:500, speedTier:"PCIe Gen3", tier:1, stock:true, qtyMax:6 },
@@ -155,8 +200,12 @@ const PRODUCTS = [
   { id:"sto-08", category:"storage", brand:"Value", name:"HDD 1TB", spec:"3.5\", SATA III", type:"HDD", capacity:1000, speedTier:"7200RPM", tier:2, stock:true, qtyMax:6 },
   { id:"sto-09", category:"storage", brand:"Value", name:"HDD 2TB", spec:"3.5\", SATA III", type:"HDD", capacity:2000, speedTier:"7200RPM", tier:3, stock:true, qtyMax:6 },
   { id:"sto-10", category:"storage", brand:"Value", name:"HDD 4TB", spec:"3.5\", SATA III, hemat daya", type:"HDD", capacity:4000, speedTier:"5400RPM", tier:4, stock:true, qtyMax:6 },
+  { id:"sto-11", category:"storage", brand:"Gaming", name:"NVMe SSD 2TB Gen5", spec:"PCIe 5.0, up to 12000MB/s", type:"SSD-NVMe", capacity:2000, speedTier:"PCIe Gen5", tier:5, stock:true, qtyMax:6 },
+  { id:"sto-12", category:"storage", brand:"Value", name:"SATA SSD 2TB", spec:"2.5\", up to 550MB/s", type:"SSD-SATA", capacity:2000, speedTier:"SATA III", tier:3, stock:true, qtyMax:6 },
+  { id:"sto-13", category:"storage", brand:"Value", name:"HDD 8TB", spec:"3.5\", SATA III, untuk NAS/arsip", type:"HDD", capacity:8000, speedTier:"7200RPM", tier:5, stock:true, qtyMax:6 },
 
   // ================= PSU =================
+  { id:"psu-00", category:"psu", brand:"Value", name:"PSU 400W White", spec:"80+ White, Non-modular", wattage:400, rating:"80+ White", tier:1, stock:true },
   { id:"psu-01", category:"psu", brand:"Value", name:"PSU 450W Bronze", spec:"80+ Bronze, Non-modular", wattage:450, rating:"80+ Bronze", tier:1, stock:true },
   { id:"psu-02", category:"psu", brand:"Gaming", name:"PSU 450W Gold", spec:"80+ Gold, Non-modular", wattage:450, rating:"80+ Gold", tier:1, stock:true },
   { id:"psu-03", category:"psu", brand:"Value", name:"PSU 500W Bronze", spec:"80+ Bronze, Non-modular", wattage:500, rating:"80+ Bronze", tier:1, stock:true },
@@ -187,6 +236,8 @@ const PRODUCTS = [
   { id:"case-03", category:"casing", brand:"Gaming", name:"Mid Tower Airflow", spec:"ATX, 3 fan preinstalled", formFactor:"Mid Tower", supportedFormFactors:["ATX","MicroATX"], tier:3, stock:true },
   { id:"case-04", category:"casing", brand:"Enthusiast", name:"Full Tower RGB Premium", spec:"E-ATX support, 6 fan ARGB", formFactor:"Full Tower", supportedFormFactors:["EATX","ATX","MicroATX"], tier:4, stock:true },
   { id:"case-05", category:"casing", brand:"Enthusiast", name:"Super Tower Extreme", spec:"E-ATX, ruang GPU & radiator ekstra besar", formFactor:"Super Tower", supportedFormFactors:["EATX","ATX","MicroATX"], tier:5, stock:true },
+  { id:"case-06", category:"casing", brand:"Gaming", name:"Micro ATX RGB Compact", spec:"Micro-ATX, 3 fan ARGB, tempered glass", formFactor:"Micro ATX", supportedFormFactors:["MicroATX","ITX"], tier:2, stock:true },
+  { id:"case-07", category:"casing", brand:"Value", name:"Mid Tower Silent", spec:"ATX, panel solid, fokus peredam suara", formFactor:"Mid Tower", supportedFormFactors:["ATX","MicroATX"], tier:2, stock:true },
 
   // ================ MONITOR (kategori baru — belum ada di data lama) ================
   // minGpuTier = tier GPU minimum yang direkomendasikan agar monitor ini "worth it"
@@ -198,6 +249,10 @@ const PRODUCTS = [
   { id:"mon-06", category:"monitor", brand:"Enthusiast", name:'Monitor 27" 4K 144Hz', spec:"3840x2160, 144Hz, IPS", size:27, resolution:"4K",   refreshRate:144, minGpuTier:5, tier:5, stock:true },
   { id:"mon-07", category:"monitor", brand:"Enthusiast", name:'Monitor 32" 4K 144Hz', spec:"3840x2160, 144Hz, IPS", size:32, resolution:"4K",   refreshRate:144, minGpuTier:5, tier:5, stock:true },
   { id:"mon-08", category:"monitor", brand:"Gaming",  name:'Monitor 34" Ultrawide QHD 144Hz', spec:"3440x1440, 144Hz, IPS", size:34, resolution:"QHD", refreshRate:144, minGpuTier:4, tier:4, stock:false },
+  { id:"mon-09", category:"monitor", brand:"Value",  name:'Monitor 22" Full HD',       spec:"1920x1080, 75Hz, IPS", size:22, resolution:"FHD", refreshRate:75, minGpuTier:1, tier:2, stock:true },
+  { id:"mon-10", category:"monitor", brand:"Gaming",  name:'Monitor 27" QHD 240Hz',    spec:"2560x1440, 240Hz, IPS", size:27, resolution:"QHD", refreshRate:240, minGpuTier:5, tier:5, stock:true },
+  { id:"mon-11", category:"monitor", brand:"Enthusiast", name:'Monitor 27" QHD OLED 240Hz', spec:"2560x1440, 240Hz, OLED", size:27, resolution:"QHD", refreshRate:240, minGpuTier:5, tier:5, stock:true },
+  { id:"mon-12", category:"monitor", brand:"Gaming",  name:'Monitor 32" QHD 165Hz Curved', spec:"2560x1440, 165Hz, VA Curved", size:32, resolution:"QHD", refreshRate:165, minGpuTier:4, tier:4, stock:true },
 ];
 
 /* Urutan & label kategori yang ditampilkan di builder.html */
