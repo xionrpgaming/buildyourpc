@@ -20,6 +20,15 @@
 </header>
 
 <section class="hero">
+  <div class="circuit-decor" aria-hidden="true">
+    <svg viewBox="0 0 800 400" preserveAspectRatio="none">
+      <path d="M0,80 L200,80 L240,120 L500,120 L540,80 L800,80"/>
+      <path d="M0,300 L150,300 L190,260 L450,260 L490,300 L800,300"/>
+      <path d="M400,0 L400,150 L360,190 L360,400"/>
+    </svg>
+  </div>
+  <div class="particle-field" id="heroParticles" aria-hidden="true"></div>
+
   <p class="hero-eyebrow">Rakit PC · Cek Kompatibilitas · Konsultasi Gratis</p>
   <h1>Rakit PC impianmu, <span>tanpa salah komponen.</span></h1>
   <p>Pilih CPU, motherboard, RAM, VGA, storage, PSU, casing, sampai monitor — sistem kami otomatis mengecek kecocokan dan memberi skor kekuatan rakitanmu. Harga & ketersediaan dikonfirmasi langsung oleh admin lewat WhatsApp.</p>
@@ -27,26 +36,31 @@
     <a href="builder.html" class="btn-primary">Mulai Rakit PC →</a>
     <a href="#kategori" class="btn-ghost">Lihat Kategori</a>
   </div>
+
+  <form class="hero-load-mini" id="indexLoadForm">
+    <input type="text" id="index-load-code" class="text-input" placeholder="Sudah punya kode rakitan? Tempel di sini">
+    <button type="submit" class="btn-ghost">Lanjutkan Rakitan →</button>
+  </form>
 </section>
 
 <p class="section-label">Kenapa Rakit Lewat Sini</p>
 <div class="feature-grid">
-  <div class="feature-card">
+  <div class="feature-card reveal">
     <span class="icon">🧩</span>
     <h3>Filter Detail per Kategori</h3>
     <p>Filter socket, tipe RAM, form factor, TDP, dan lainnya — seperti memilih part di toko komponen profesional.</p>
   </div>
-  <div class="feature-card">
+  <div class="feature-card reveal">
     <span class="icon">✅</span>
     <h3>Cek Kompatibilitas Otomatis</h3>
     <p>Sistem menandai kecocokan CPU-motherboard, tipe RAM, ukuran casing, sampai kebutuhan daya PSU secara real-time.</p>
   </div>
-  <div class="feature-card">
+  <div class="feature-card reveal">
     <span class="icon">🧠</span>
     <h3>Multi-Component</h3>
     <p>Tambahkan lebih dari satu RAM, storage, atau VGA sekaligus sesuai kebutuhan rakitanmu.</p>
   </div>
-  <div class="feature-card">
+  <div class="feature-card reveal">
     <span class="icon">📊</span>
     <h3>Build Score</h3>
     <p>Estimasi skor kekuatan rakitan (Entry hingga Enthusiast) berdasarkan tingkatan komponen & keseimbangan CPU/GPU.</p>
@@ -55,15 +69,16 @@
 
 <p class="section-label" id="kategori">Kategori Komponen</p>
 <div class="category-strip">
-  <a class="category-pill" href="builder.html">Processor (CPU)</a>
-  <a class="category-pill" href="builder.html">Motherboard</a>
-  <a class="category-pill" href="builder.html">RAM</a>
-  <a class="category-pill" href="builder.html">VGA Card</a>
-  <a class="category-pill" href="builder.html">Storage</a>
-  <a class="category-pill" href="builder.html">Power Supply</a>
-  <a class="category-pill" href="builder.html">Casing</a>
-  <a class="category-pill" href="builder.html">Monitor</a>
+  <a class="category-pill reveal" href="builder.html">Processor (CPU)</a>
+  <a class="category-pill reveal" href="builder.html">Motherboard</a>
+  <a class="category-pill reveal" href="builder.html">RAM</a>
+  <a class="category-pill reveal" href="builder.html">VGA Card</a>
+  <a class="category-pill reveal" href="builder.html">Storage</a>
+  <a class="category-pill reveal" href="builder.html">Power Supply</a>
+  <a class="category-pill reveal" href="builder.html">Casing</a>
+  <a class="category-pill reveal" href="builder.html">Monitor</a>
 </div>
 
+<script src="js/animations.js"></script>
 </body>
 </html>

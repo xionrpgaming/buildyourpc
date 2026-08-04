@@ -19,6 +19,12 @@
 </header>
 
 <div class="builder-shell">
+  <div class="load-bar">
+    <span class="load-bar-label">🔑 Punya kode rakitan tersimpan?</span>
+    <input type="text" id="load-code-input-top" class="text-input" placeholder="Tempel kode rakitan di sini (contoh: XG1-...)">
+    <button id="load-code-btn-top" class="btn-secondary" type="button">Muat Rakitan</button>
+  </div>
+
   <nav id="category-nav"></nav>
 
   <aside id="filter-panel"></aside>
@@ -48,6 +54,28 @@
       <div id="score-wrap"></div>
     </div>
 
+    <div class="save-load-box">
+      <p class="panel-subtitle">Simpan / Muat Rakitan</p>
+      <button id="save-build-btn" class="btn-secondary" type="button">💾 Simpan &amp; Kirim ke Email Saya</button>
+      <div id="save-build-form" class="save-form hidden">
+        <input type="email" id="save-email-input" class="text-input" placeholder="Email kamu (wajib diisi)" required>
+        <button id="save-build-confirm" class="btn-secondary" type="button">Kirim Kode</button>
+      </div>
+      <div id="save-build-result" class="code-result hidden">
+        <label>Kode Rakitan Kamu</label>
+        <div class="code-row">
+          <input type="text" id="save-code-output" class="code-input" readonly>
+          <button id="copy-code-btn" class="btn-copy" type="button">Salin</button>
+        </div>
+        <p class="code-hint" id="save-result-hint">Kode ini juga sudah dikirim ke email kamu. Masukkan lagi kapan saja di kolom "Muat Rakitan" untuk melanjutkan — dari perangkat manapun.</p>
+      </div>
+      <div class="load-row">
+        <input type="text" id="load-code-input" class="text-input" placeholder="Atau tempel kode di sini">
+        <button id="load-code-btn" class="btn-secondary" type="button">Muat</button>
+      </div>
+      <div id="saved-builds-list" class="saved-builds-list"></div>
+    </div>
+
     <div class="summary-actions">
       <p class="price-note">Harga tidak ditampilkan di sini — konsultasikan langsung dengan admin via WhatsApp untuk info harga &amp; ketersediaan terkini.</p>
       <button id="wa-order-btn" class="btn-wa">Pesan / Tanya via WhatsApp</button>
@@ -57,6 +85,8 @@
 </div>
 
 <script src="js/products-data.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script src="js/app.js"></script>
+<script src="js/animations.js"></script>
 </body>
 </html>
