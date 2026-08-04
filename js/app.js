@@ -143,13 +143,13 @@ function calcBuildScore(){
 
 /* ---------- FILTER OPTIONS ---------- */
 const FILTER_DEFS = {
-  cpu: [ {key:"brand", label:"Manufacturer"}, {key:"socket", label:"Socket"} ],
+  cpu: [ {key:"brand", label:"Manufacturer"}, {key:"socket", label:"Socket"}, {key:"generation", label:"Generasi"} ],
   motherboard: [ {key:"brand", label:"Manufacturer"}, {key:"socket", label:"Socket"}, {key:"memoryType", label:"Tipe RAM"}, {key:"formFactor", label:"Form Factor"} ],
-  ram: [ {key:"memoryType", label:"Tipe"}, {key:"capacity", label:"Kapasitas (GB)"} ],
-  gpu: [ {key:"brand", label:"Manufacturer"}, {key:"vram", label:"VRAM (GB)"} ],
-  storage: [ {key:"type", label:"Tipe"} ],
-  psu: [ {key:"wattage", label:"Daya (W)"} ],
-  casing: [ {key:"brand", label:"Manufacturer"} ],
+  ram: [ {key:"memoryType", label:"Tipe"}, {key:"capacity", label:"Kapasitas (GB)"}, {key:"speed", label:"Speed"} ],
+  gpu: [ {key:"brand", label:"Manufacturer"}, {key:"series", label:"Generasi"}, {key:"vram", label:"VRAM (GB)"} ],
+  storage: [ {key:"type", label:"Tipe"}, {key:"speedTier", label:"Kecepatan"} ],
+  psu: [ {key:"wattage", label:"Daya (W)"}, {key:"rating", label:"Sertifikasi"} ],
+  casing: [ {key:"formFactor", label:"Form Factor"} ],
   monitor: [ {key:"resolution", label:"Resolusi"}, {key:"refreshRate", label:"Refresh Rate (Hz)"} ],
 };
 
