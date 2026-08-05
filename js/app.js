@@ -1,9 +1,9 @@
 /* ============================================================
    XION GAMING — BUILDER LOGIC
-   Ganti nomor WhatsApp di bawah ini dengan nomor toko Anda.
-   Format: kode negara + nomor tanpa 0 di depan, tanpa spasi/strip.
+   Nomor WhatsApp toko sekarang didefinisikan satu kali di
+   js/build-shared.js (const WA_NUMBER), supaya sama persis di
+   builder.html & hasil.html.
    ============================================================ */
-const WA_NUMBER = "6285814565849";
 
 /* ---------- STATE ---------- */
 const state = {
@@ -400,22 +400,11 @@ async function sendBuildCodeEmail(email, code){
   }
 }
 
-/* ---------- WHATSAPP ORDER ---------- */
+/* ---------- WHATSAPP ORDER ----------
+   Logika pesan sekarang ada di buildWaMessageFrom() di
+   js/build-shared.js, supaya sama persis dipakai di hasil.html. */
 function buildWaMessage(){
-  const items = allSelectedItems();
-  const lines = ["Halo, saya mau tanya-tanya rakitan PC berikut:", ""];
-  items.forEach(({product,qty})=>{
-    lines.push(`- ${product.name}${qty>1 ? ` (x${qty})` : ""} — ${product.spec}`);
-  });
-  const result = calcBuildScore();
-  if(result.score !== null){
-    lines.push("", `Estimasi Build Score: ${result.score}/100 (${result.label})`);
-  }
-  lines.push("", "Mohon info harga & ketersediaan untuk rakitan ini ya, terima kasih!");
-  if(items.length){
-    lines.push("", `Kode Build (simpan untuk cek ulang nanti): ${generateBuildCode()}`);
-  }
-  return lines.join("\n");
+  return buildWaMessageFrom(state.single, state.multi);
 }
 
 /* ============================================================
@@ -569,11 +558,16 @@ function initSaveLoad(){
       saveForm.classList.add("hidden");
       renderSavedBuildsList();
 
+      // Buka halaman hasil rakitan secara otomatis di tab baru —
+      // tidak menunggu status pengiriman email, supaya pengguna
+      // langsung lihat hasilnya begitu klik simpan.
+      window.open(buildResultLink(code), "_blank");
+
       const resultHint = $("#save-result-hint");
       const originalLabel = saveConfirm.textContent;
       saveConfirm.disabled = true;
       saveConfirm.textContent = "Mengirim...";
-      showToast("Membuat kode & mengirim ke email...");
+      showToast("Halaman hasil dibuka di tab baru — mengirim kode ke email...");
 
       const result = await sendBuildCodeEmail(email, code);
       saveConfirm.disabled = false;

@@ -17,6 +17,12 @@
 
 function byIdShared(id){ return PRODUCTS.find(p => p.id === id); }
 
+/* ---------- NOMOR WHATSAPP TOKO ----------
+   Satu-satunya tempat nomor ini didefinisikan (dipakai app.js
+   dan hasil.js). Format: kode negara + nomor tanpa 0 di depan,
+   tanpa spasi/strip. */
+const WA_NUMBER = "6285814565849";
+
 /* ---------- BASE64 URL-SAFE ---------- */
 function toBase64Url(str){
   return btoa(unescape(encodeURIComponent(str))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
@@ -191,4 +197,22 @@ function buildResultLink(code){
 }
 function buildEditLink(code){
   return siteBasePath() + "builder.html?code=" + encodeURIComponent(code);
+}
+
+/* ---------- PESAN WHATSAPP (versi parametrik, dipakai app.js & hasil.js) ---------- */
+function buildWaMessageFrom(single, multi){
+  const items = allItemsFrom(single, multi);
+  const lines = ["Halo, saya mau tanya-tanya rakitan PC berikut:", ""];
+  items.forEach(({product,qty})=>{
+    lines.push(`- ${product.name}${qty>1 ? ` (x${qty})` : ""} — ${product.spec}`);
+  });
+  const result = calcBuildScoreFrom(single, multi);
+  if(result.score !== null){
+    lines.push("", `Estimasi Build Score: ${result.score}/100 (${result.label})`);
+  }
+  lines.push("", "Mohon info harga & ketersediaan untuk rakitan ini ya, terima kasih!");
+  if(items.length){
+    lines.push("", `Kode Build (simpan untuk cek ulang nanti): ${encodeBuildCode(single, multi)}`);
+  }
+  return lines.join("\n");
 }
