@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hasil Rakitan — Xion Gaming</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <a href="index.html" class="logo"><span class="dot">■</span> Xion Gaming</a>
+  <nav>
+    <a href="index.html">Beranda</a>
+    <a href="builder.html">Rakit PC</a>
+  </nav>
+</header>
+
+<div class="result-shell">
+
+  <!-- ditampilkan kalau kode valid & ada isinya -->
+  <main id="result-view" class="result-card hidden">
+    <div class="result-topline">
+      <span class="result-eyebrow">Hasil Rakitan Kamu</span>
+      <div class="result-code-row">
+        <code id="result-code-text" class="result-code-text"></code>
+        <button id="result-copy-btn" class="btn-copy" type="button">Salin Kode</button>
+      </div>
+    </div>
+
+    <div class="result-grid">
+      <section class="result-col">
+        <p class="panel-subtitle">Komponen Terpilih</p>
+        <div id="result-summary-list"></div>
+      </section>
+
+      <section class="result-col">
+        <p class="panel-subtitle">Cek Kompatibilitas</p>
+        <div id="result-compat-list"></div>
+
+        <p class="panel-subtitle result-score-title">Build Score</p>
+        <div id="result-score-wrap"></div>
+      </section>
+    </div>
+
+    <div class="result-actions">
+      <p class="price-note">Harga tidak ditampilkan di sini — konsultasikan langsung dengan admin via WhatsApp untuk info harga &amp; ketersediaan terkini.</p>
+      <button id="result-wa-btn" class="btn-wa" type="button">Pesan / Tanya via WhatsApp</button>
+      <a id="result-edit-link" class="btn-secondary" href="#">✏️ Edit Rakitan Ini</a>
+    </div>
+  </main>
+
+  <!-- ditampilkan kalau tidak ada ?code= atau kodenya tidak valid -->
+  <main id="result-empty" class="result-card hidden">
+    <p class="result-eyebrow">Hasil Rakitan</p>
+    <h1 class="result-empty-title">Belum ada kode rakitan</h1>
+    <p class="result-empty-desc">Buka link ini lewat email konfirmasi rakitanmu, atau tempel kode rakitan di bawah untuk memuatnya di sini.</p>
+    <div class="load-row">
+      <input type="text" id="result-load-input" class="text-input" placeholder="Tempel kode rakitan, mis. XG1-...">
+      <button id="result-load-btn" class="btn-secondary" type="button">Muat</button>
+    </div>
+    <a class="btn-primary result-empty-cta" href="builder.html">Mulai Rakit PC Baru</a>
+  </main>
+
+</div>
+
+<script src="js/products-data.js"></script>
+<script src="js/build-shared.js"></script>
+<script src="js/hasil.js"></script>
+</body>
+</html>
