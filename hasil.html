@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hasil Rakitan — Xion Gaming</title>
+<title>Hasil Rakitan Kamu — Xion Gaming</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
@@ -20,54 +20,52 @@
 
 <div class="result-shell">
 
-  <!-- ditampilkan kalau kode valid & ada isinya -->
-  <main id="result-view" class="result-card hidden">
+  <div class="result-card hidden" id="result-card">
     <div class="result-topline">
-      <span class="result-eyebrow">Hasil Rakitan Kamu</span>
+      <span class="result-eyebrow">✓ Rakitan Tersimpan</span>
       <div class="result-code-row">
-        <code id="result-code-text" class="result-code-text"></code>
-        <button id="result-copy-btn" class="btn-copy" type="button">Salin Kode</button>
+        <span class="result-code-text" id="result-code-text"></span>
+        <button id="result-copy-btn" class="btn-secondary" type="button">Salin</button>
       </div>
     </div>
 
     <div class="result-grid">
-      <section class="result-col">
+      <div class="result-col">
         <p class="panel-subtitle">Komponen Terpilih</p>
         <div id="result-summary-list"></div>
-      </section>
 
-      <section class="result-col">
-        <p class="panel-subtitle">Cek Kompatibilitas</p>
+        <p class="panel-subtitle" style="margin-top:18px;">Cek Kompatibilitas</p>
         <div id="result-compat-list"></div>
+      </div>
 
+      <div class="result-col">
         <p class="panel-subtitle result-score-title">Build Score</p>
         <div id="result-score-wrap"></div>
-      </section>
+      </div>
     </div>
 
     <div class="result-actions">
       <p class="price-note">Harga tidak ditampilkan di sini — konsultasikan langsung dengan admin via WhatsApp untuk info harga &amp; ketersediaan terkini.</p>
       <button id="result-wa-btn" class="btn-wa" type="button">Pesan / Tanya via WhatsApp</button>
-      <a id="result-edit-link" class="btn-secondary" href="#">✏️ Edit Rakitan Ini</a>
+      <a id="result-edit-link" class="btn-secondary" href="builder.html">✏️ Lanjut Edit Rakitan Ini</a>
     </div>
-  </main>
+  </div>
 
-  <!-- ditampilkan kalau tidak ada ?code= atau kodenya tidak valid -->
-  <main id="result-empty" class="result-card hidden">
-    <p class="result-eyebrow">Hasil Rakitan</p>
-    <h1 class="result-empty-title">Belum ada kode rakitan</h1>
-    <p class="result-empty-desc">Buka link ini lewat email konfirmasi rakitanmu, atau tempel kode rakitan di bawah untuk memuatnya di sini.</p>
+  <div class="result-card hidden" id="result-empty">
+    <h2 class="result-empty-title">Kode Rakitan Tidak Ditemukan</h2>
+    <p class="result-empty-desc">Kode belum dimasukkan, sudah tidak valid, atau rusak. Tempel kode rakitan kamu di bawah untuk melihat hasilnya.</p>
     <div class="load-row">
-      <input type="text" id="result-load-input" class="text-input" placeholder="Tempel kode rakitan, mis. XG1-...">
+      <input type="text" id="result-load-input" class="text-input" placeholder="Tempel kode rakitan di sini (contoh: XG1-...)">
       <button id="result-load-btn" class="btn-secondary" type="button">Muat</button>
     </div>
-    <a class="btn-primary result-empty-cta" href="builder.html">Mulai Rakit PC Baru</a>
-  </main>
+    <a href="builder.html" class="btn-ghost result-empty-cta">Atau mulai rakit baru →</a>
+  </div>
 
 </div>
 
 <script src="js/products-data.js"></script>
 <script src="js/build-shared.js"></script>
 <script src="js/hasil.js"></script>
+<script src="js/animations.js"></script>
 </body>
 </html>
