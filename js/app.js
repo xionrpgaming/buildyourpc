@@ -41,46 +41,13 @@ function allSelectedItems(){
   return items;
 }
 
-/* ---------- COMPATIBILITY ---------- */
+/* ---------- COMPATIBILITY ----------
+   Logika sebenarnya sekarang ada di js/build-shared.js (versi
+   parametrik compatInfoFrom), supaya bisa dipakai ulang persis
+   sama di hasil.html. Fungsi ini cuma menyambungkan ke state
+   builder yang sedang aktif. */
 function compatInfo(){
-  const cpu = getSelectedProduct("cpu");
-  const mobo = getSelectedProduct("motherboard");
-  const casing = getSelectedProduct("casing");
-  const ramList = getMultiList("ram");
-  const gpuList = getMultiList("gpu");
-  const psu = getSelectedProduct("psu");
-
-  const checks = [];
-
-  if(cpu && mobo){
-    checks.push({
-      label:`Socket CPU (${cpu.socket}) ↔ Motherboard (${mobo.socket})`,
-      ok: cpu.socket === mobo.socket
-    });
-  }
-  if(mobo && ramList.length){
-    const mismatch = ramList.find(r => r.product.memoryType !== mobo.memoryType);
-    checks.push({
-      label:`Tipe RAM (${mobo.memoryType} dibutuhkan oleh motherboard)`,
-      ok: !mismatch
-    });
-  }
-  if(mobo && casing){
-    checks.push({
-      label:`Ukuran Motherboard (${mobo.formFactor}) muat di Casing`,
-      ok: casing.supportedFormFactors.includes(mobo.formFactor)
-    });
-  }
-  const tdpTotal = (cpu ? cpu.tdp : 0) + gpuList.reduce((s,g)=> s + g.product.tdp * g.qty, 0);
-  const recommendedWattage = Math.ceil((tdpTotal * 1.3 + 100) / 50) * 50;
-  if(psu){
-    checks.push({
-      label:`Daya PSU (${psu.wattage}W) vs estimasi kebutuhan (±${recommendedWattage}W)`,
-      ok: psu.wattage >= recommendedWattage
-    });
-  }
-
-  return { checks, tdpTotal, recommendedWattage, cpu, mobo, gpuList };
+  return compatInfoFrom(state.single, state.multi);
 }
 
 /* ---------- BUILD SCORE ----------
@@ -91,54 +58,7 @@ function compatInfo(){
    sekelas cenderung dipasangkan, PSU diberi headroom ±30%). Sesuaikan
    bobot di bawah bila Anda punya acuan benchmark sendiri. */
 function calcBuildScore(){
-  const cpu = getSelectedProduct("cpu");
-  const mobo = getSelectedProduct("motherboard");
-  const psu = getSelectedProduct("psu");
-  const ramList = getMultiList("ram");
-  const gpuList = getMultiList("gpu");
-  const storageList = getMultiList("storage");
-
-  const core = [cpu, mobo, psu];
-  const haveCore = core.filter(Boolean).length;
-  const notes = [];
-
-  if(haveCore < 3 || ramList.length===0 || gpuList.length===0){
-    return {
-      score:null,
-      label:"Rakitan Belum Lengkap",
-      notes:["Pilih minimal CPU, Motherboard, RAM, VGA, dan PSU untuk melihat skor."]
-    };
-  }
-
-  const gpuTier = Math.max(...gpuList.map(g=>g.product.tier));
-  const ramTotalGB = ramList.reduce((s,r)=> s + r.product.capacity*r.qty, 0);
-  const hasNvme = storageList.some(s=> s.product.type === "SSD-NVMe");
-
-  let score = 0;
-  score += cpu.tier * 15;      // 0-75
-  score += gpuTier * 15;       // 0-75
-  score += Math.min(ramTotalGB/64, 1) * 15; // 0-15, capped di 64GB
-  score += hasNvme ? 10 : (storageList.length ? 5 : 0);
-
-  const balanceGap = Math.abs(cpu.tier - gpuTier);
-  if(balanceGap >= 3){ score -= 15; notes.push("CPU dan GPU cukup timpang — salah satu jadi bottleneck."); }
-  else if(balanceGap <= 1){ score += 5; notes.push("CPU dan GPU seimbang, cocok dipasangkan."); }
-
-  const { tdpTotal, recommendedWattage } = compatInfo();
-  if(psu.wattage < recommendedWattage){ score -= 20; notes.push(`PSU ${psu.wattage}W pas-pasan untuk estimasi beban ±${tdpTotal}W — disarankan minimal ${recommendedWattage}W.`); }
-  else { notes.push(`PSU memiliki headroom aman di atas estimasi beban ±${tdpTotal}W.`); }
-
-  if(ramTotalGB >= 32) notes.push("Kapasitas RAM lega untuk multitasking & game modern.");
-  else if(ramTotalGB < 16) notes.push("Kapasitas RAM tergolong minim untuk game modern (disarankan ≥16GB).");
-
-  score = Math.max(0, Math.min(100, Math.round(score)));
-
-  let label = "Entry-Level";
-  if(score >= 80) label = "Enthusiast / Flagship";
-  else if(score >= 60) label = "High-End";
-  else if(score >= 40) label = "Mainstream";
-
-  return { score, label, notes };
+  return calcBuildScoreFrom(state.single, state.multi);
 }
 
 /* ---------- FILTER OPTIONS ---------- */
@@ -414,11 +334,23 @@ function renderSummary(){
    1. Daftar gratis di https://www.emailjs.com
    2. Email Services → Add New Service → hubungkan Gmail/Outlook
       toko Anda → salin "Service ID" (contoh: service_abc123)
-   3. Email Templates → Create New Template. Isi:
-        - To Email   : {{to_email}}
-        - Subject    : Kode Rakitan PC Kamu - Xion Gaming
-        - Content    : pakai variable {{build_code}}, {{build_summary}},
-                        {{site_url}} di isi emailnya (boleh disusun bebas)
+   3. Email Templates → Create New Template. Isi "To Email" dengan
+      {{to_email}}, lalu di isi/subject email pakai variable berikut
+      (nama variabel harus PERSIS sama, isi & tata letak bebas):
+        - {{build_code}}     kode rakitan, mis. XG1-eyJzIjp7...
+        - {{build_summary}}  daftar komponen dalam teks biasa
+        - {{result_link}}    link HALAMAN HASIL (hasil.html) — buka
+                              kapan saja untuk lihat ulang rakitan
+                              lengkap dgn cek kompatibilitas & skor.
+                              Ini link utama yang ingin dibuka user.
+        - {{edit_link}}      link ke builder.html untuk lanjut
+                              mengedit rakitan yang sama (opsional)
+      Contoh subject   : Rakitan PC Kamu Sudah Tersimpan — Xion Gaming
+      Contoh isi (boleh HTML kalau pakai template editor visual):
+        Kode rakitan kamu: {{build_code}}
+        Lihat & simpan hasil rakitan kamu di sini:
+        {{result_link}}
+        (mau ubah lagi? buka: {{edit_link}})
       Simpan → salin "Template ID" (contoh: template_xyz789)
    4. Account → General → salin "Public Key"
    5. Tempel ketiga nilai itu di EMAILJS_CONFIG di bawah ini.
@@ -429,7 +361,7 @@ function renderSummary(){
    ============================================================ */
 const EMAILJS_CONFIG = {
   publicKey: "YOUR_EMAILJS_PUBLIC_KEY",
-  serviceId: "YOUR_EMAILJS_SERVICE_ID",
+  serviceId: "service_6zzzr19",
   templateId: "YOUR_EMAILJS_TEMPLATE_ID",
 };
 
@@ -458,7 +390,8 @@ async function sendBuildCodeEmail(email, code){
       to_email: email,
       build_code: code,
       build_summary: buildEmailSummaryText(),
-      site_url: window.location.origin + window.location.pathname.replace(/builder\.html$/, "") + "builder.html?code=" + encodeURIComponent(code),
+      result_link: buildResultLink(code),
+      edit_link: buildEditLink(code),
     });
     return { sent:true };
   }catch(err){
@@ -499,42 +432,11 @@ function buildWaMessage(){
    ============================================================ */
 const SAVED_BUILDS_KEY = "xion_saved_builds";
 
-function toBase64Url(str){
-  return btoa(unescape(encodeURIComponent(str))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
-}
-function fromBase64Url(b64){
-  let s = b64.replace(/-/g,"+").replace(/_/g,"/");
-  while(s.length % 4) s += "=";
-  return decodeURIComponent(escape(atob(s)));
-}
-
+/* toBase64Url / fromBase64Url / encodeBuildCode / decodeBuildCode
+   sekarang ada di js/build-shared.js (dipakai bareng hasil.html).
+   generateBuildCode() di sini cuma menyambungkan ke state aktif. */
 function generateBuildCode(){
-  const payload = { s: state.single, m: state.multi };
-  return "XG1-" + toBase64Url(JSON.stringify(payload));
-}
-
-function decodeBuildCode(raw){
-  try{
-    const trimmed = String(raw).trim();
-    const body = trimmed.startsWith("XG1-") ? trimmed.slice(4) : trimmed;
-    const payload = JSON.parse(fromBase64Url(body));
-    if(!payload || typeof payload !== "object") return null;
-
-    const single = {};
-    Object.entries(payload.s || {}).forEach(([cat,id])=>{
-      if(id && byId(id)) single[cat] = id;
-    });
-    const multi = { ram:{}, gpu:{}, storage:{} };
-    Object.entries(payload.m || {}).forEach(([cat,obj])=>{
-      if(!multi[cat]) multi[cat] = {};
-      Object.entries(obj || {}).forEach(([id,qty])=>{
-        if(byId(id) && qty > 0) multi[cat][id] = qty;
-      });
-    });
-    return { single, multi };
-  } catch(e){
-    return null;
-  }
+  return encodeBuildCode(state.single, state.multi);
 }
 
 function applyDecodedBuild(decoded){
@@ -640,6 +542,7 @@ function initSaveLoad(){
   const codeOutput = $("#save-code-output");
   const copyBtn = $("#copy-code-btn");
   const emailInput = $("#save-email-input");
+  const resultLinkEl = $("#save-result-link");
 
   if(saveBtn){
     saveBtn.addEventListener("click", ()=>{
@@ -661,6 +564,7 @@ function initSaveLoad(){
       const code = generateBuildCode();
       addSavedBuildRecord(code, email);
       codeOutput.value = code;
+      if(resultLinkEl) resultLinkEl.href = buildResultLink(code);
       saveResult.classList.remove("hidden");
       saveForm.classList.add("hidden");
       renderSavedBuildsList();
@@ -676,14 +580,14 @@ function initSaveLoad(){
       saveConfirm.textContent = originalLabel;
 
       if(result.sent){
-        showToast("Kode terkirim ke email kamu ✓");
-        if(resultHint) resultHint.textContent = `Kode ini sudah dikirim ke ${email}. Masukkan lagi kapan saja di kolom "Muat Rakitan" untuk melanjutkan — dari perangkat manapun.`;
+        showToast("Kode & link hasil terkirim ke email kamu ✓");
+        if(resultHint) resultHint.textContent = `Kode dan link halaman hasil sudah dikirim ke ${email}. Buka link itu kapan saja untuk lihat ulang rakitan ini, atau masukkan kodenya lagi di kolom "Muat Rakitan" — dari perangkat manapun.`;
       } else if(result.reason === "not-configured"){
         showToast("Kode dibuat ✓ (pengiriman email belum di-setup admin)", "err");
-        if(resultHint) resultHint.textContent = `Kode berhasil dibuat, tapi pengiriman otomatis ke email belum aktif di situs ini. Salin & simpan kode ini secara manual dulu.`;
+        if(resultHint) resultHint.textContent = `Kode & halaman hasil berhasil dibuat, tapi pengiriman otomatis ke email belum aktif di situs ini. Salin kode atau buka "Buka Halaman Hasil" di bawah untuk simpan link-nya secara manual.`;
       } else {
         showToast("Kode dibuat, tapi gagal terkirim ke email. Salin manual ya.", "err");
-        if(resultHint) resultHint.textContent = `Kode berhasil dibuat, tapi pengiriman ke email gagal (cek koneksi/coba lagi). Salin & simpan kode ini secara manual dulu.`;
+        if(resultHint) resultHint.textContent = `Kode & halaman hasil berhasil dibuat, tapi pengiriman ke email gagal (cek koneksi/coba lagi). Salin kode atau buka "Buka Halaman Hasil" di bawah untuk simpan link-nya secara manual.`;
       }
     });
   }
