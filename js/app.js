@@ -360,9 +360,9 @@ function renderSummary(){
    ini) — hanya bagian "kirim ke email" yang dilewati otomatis.
    ============================================================ */
 const EMAILJS_CONFIG = {
-  publicKey: "YOUR_EMAILJS_PUBLIC_KEY",
+  publicKey: "zlMzDLlY5Z7ITM535",
   serviceId: "service_6zzzr19",
-  templateId: "YOUR_EMAILJS_TEMPLATE_ID",
+  templateId: "template_nsytfw3",
 };
 
 function isEmailJsConfigured(){
