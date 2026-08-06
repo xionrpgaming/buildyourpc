@@ -25,8 +25,9 @@
   --font-mono:'JetBrains Mono', monospace;
 }
 
-*{ box-sizing:border-box; }
-html,body{ margin:0; padding:0; }
+*{ box-sizing:border-box; -webkit-tap-highlight-color:rgba(124,92,255,.18); }
+html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; }
+html,body{ margin:0; padding:0; overflow-x:hidden; max-width:100%; }
 body{
   background:var(--bg);
   color:var(--text);
@@ -35,25 +36,32 @@ body{
 }
 a{ color:inherit; }
 button{ font-family:inherit; cursor:pointer; }
+button, a{ touch-action:manipulation; }
 ul{ margin:0; padding:0; list-style:none; }
 
 /* ---------- HEADER ---------- */
 .site-header{
   display:flex; align-items:center; justify-content:space-between;
   padding:16px 28px;
+  padding-top:calc(16px + env(safe-area-inset-top));
+  padding-left:calc(28px + env(safe-area-inset-left));
+  padding-right:calc(28px + env(safe-area-inset-right));
   border-bottom:1px solid var(--border);
   background:linear-gradient(180deg, rgba(124,92,255,.08), transparent);
   position:sticky; top:0; z-index:20;
   backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
 }
 .logo{
   font-family:var(--font-display);
   font-weight:700;
   font-size:20px;
   letter-spacing:.02em;
-  display:flex; align-items:center; gap:8px;
+  display:flex; align-items:center; gap:9px;
+  text-decoration:none; color:var(--text);
 }
-.logo .dot{ color:var(--accent); }
+.logo-mark{ width:28px; height:28px; flex-shrink:0; display:block; }
+.logo-mark svg{ width:100%; height:100%; display:block; }
 .site-header nav{ display:flex; gap:22px; }
 .site-header nav a{
   text-decoration:none; color:var(--muted); font-size:14px; font-weight:600;
@@ -264,7 +272,7 @@ body{ background-color:var(--bg); }
 
 /* toast */
 .xg-toast{
-  position:fixed; left:50%; bottom:26px; transform:translate(-50%,16px);
+  position:fixed; left:50%; bottom:calc(26px + env(safe-area-inset-bottom)); transform:translate(-50%,16px);
   background:var(--panel-alt); border:1px solid var(--border); color:var(--text);
   padding:12px 18px; border-radius:12px; font-size:13.5px; font-weight:600;
   box-shadow:0 14px 30px -10px rgba(0,0,0,.5);
@@ -598,10 +606,6 @@ body{ background-color:var(--bg); }
 }
 
 /* ---------- TESTIMONI (infinite marquee) ---------- */
-.testimoni-placeholder-note{
-  text-align:center; color:var(--warn); font-size:12.5px; font-family:var(--font-mono);
-  max-width:600px; margin:0 auto 26px; padding:0 28px;
-}
 
 .testimoni-marquee{
   position:relative; overflow:hidden;
@@ -701,4 +705,54 @@ body{ background-color:var(--bg); }
   .code-entry-box{ border-bottom:none; }
   #category-nav{ flex-direction:row; overflow-x:auto; }
   #filter-panel{ border-right:none; border-bottom:1px solid var(--border); max-height:320px; }
+  #summary-panel{ flex-direction:column; }
+}
+
+/* ============================================================
+   MOBILE REFINEMENTS TAMBAHAN (Android & iOS)
+   ------------------------------------------------------------
+   Bagian di atas sudah menutup layout builder/landing di lebar
+   tablet ke bawah. Blok ini fokus ke detail yang sering meleset
+   khusus di HP: ukuran target sentuh, header yang kepenuhan,
+   dan bug klasik iOS Safari yang auto-zoom saat fokus ke input
+   dengan font-size di bawah 16px.
+   ============================================================ */
+@media (max-width:640px){
+  .site-header{ gap:10px; }
+  .logo{ font-size:16.5px; gap:7px; }
+  .logo-mark{ width:24px; height:24px; }
+  .site-header nav{ gap:14px; }
+  .site-header nav a{ font-size:13px; }
+  .btn-cta{ padding:8px 14px; font-size:12.5px; }
+
+  .hero{ padding:64px 20px 52px; }
+  .hero-eyebrow{ font-size:10.5px; padding:7px 14px; }
+  .hero p{ font-size:15px; }
+  .hero-actions{ flex-direction:column; align-items:stretch; }
+  .hero-actions .btn-primary, .hero-actions .btn-ghost{ text-align:center; padding:14px 20px; }
+
+  .feature-grid, .category-strip{ padding-left:20px; padding-right:20px; }
+
+  /* cegah iOS Safari auto-zoom saat fokus input (butuh font-size >=16px) */
+  .text-input, .code-input, .code-entry-box .text-input{ font-size:16px !important; }
+
+  /* target sentuh minimal ~44px, standar aksesibilitas iOS/Android */
+  .qty-btn{ min-height:44px; }
+  .select-btn{ min-height:44px; }
+  .nav-item{ min-height:44px; }
+  .btn-secondary, .btn-copy, .btn-wa, .btn-reset{ min-height:44px; }
+}
+
+@media (max-width:400px){
+  .hero h1{ font-size:29px; }
+  .bisnis-media svg{ max-width:220px; }
+  .result-code-text{ max-width:130px; }
+}
+
+/* landscape iPhone/Android notch — beri ruang aman kiri-kanan */
+@media (max-width:900px) and (orientation:landscape){
+  .site-header{
+    padding-left:calc(20px + env(safe-area-inset-left));
+    padding-right:calc(20px + env(safe-area-inset-right));
+  }
 }
