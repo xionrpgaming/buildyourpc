@@ -52,6 +52,22 @@
    tdp diisi dari spek umum tipe tersebut di pasaran, bukan diukur langsung —
    cek ulang kalau Anda punya data resmi yang lebih presisi.
    ================================================================================
+
+   =========================== CROSSCHECK VARIASI (terbaru) =====================
+   Ditemukan gap nyata saat crosscheck: 0 CPU tier budget (Ryzen 3 / Core i3)
+   dan 0 tier tertinggi (Core i9) di SELURUH socket, plus jumlah motherboard per
+   socket jauh lebih sedikit dari jumlah CPU-nya (AM4: 9 CPU vs 2 motherboard;
+   LGA1200/1151/1150/sTR5 masing-masing cuma 1 motherboard). Ditambahkan:
+     - CPU (+16): Ryzen 3 3100/3300X (AM4), Ryzen 5 7500F (AM5), Core i3-12100F/
+       13100F + Core i9-13900K/14900K (LGA1700), Core i3-10100F + i9-10900K +
+       i7-11700K (LGA1200), Core i3-9100F + i7-8700K (LGA1151), Core i3-4160 +
+       i7-4790K (LGA1150), Core Ultra 5 225 (LGA1851), Threadripper 7970X (sTR5).
+     - Motherboard (+15): A320M/B450M/X570 (AM4), B650/X670 ATX (AM5), H610/
+       B760/Z690 (LGA1700), B860 (LGA1851), H510/Z590 (LGA1200), B360M/Z390
+       (LGA1151), Z97 (LGA1150), WRX90 (sTR5).
+   Total sekarang: 54 CPU, 32 motherboard — setiap socket minimal 2 motherboard
+   dan tiap socket punya rentang tier budget s/d tertinggi.
+   ================================================================================
    ============================================================ */
 
 const PRODUCTS = [
@@ -94,6 +110,24 @@ const PRODUCTS = [
   { id:"cpu-25", category:"cpu", brand:"Intel", name:"Intel Core i5-9400F", spec:"6 Core / 6 Thread, 2.9GHz base", socket:"LGA1151", generation:"Core Gen 8-9", tdp:65, tier:2, stock:true },
   { id:"cpu-26", category:"cpu", brand:"Intel", name:"Intel Core i5-4460", spec:"4 Core / 4 Thread, 3.2GHz base", socket:"LGA1150", generation:"Core Gen 4", tdp:84, tier:1, stock:true },
   { id:"cpu-27", category:"cpu", brand:"Intel", name:"Intel Core i5-4590", spec:"4 Core / 4 Thread, 3.3GHz base", socket:"LGA1150", generation:"Core Gen 4", tdp:84, tier:1, stock:true },
+  // -- Pelengkap: tier budget (Ryzen 3 / Core i3) & tier tertinggi (Core i9) yang
+  //    sebelumnya kosong di semua socket, plus pemerataan varian per socket --
+  { id:"cpu-28", category:"cpu", brand:"AMD", name:"AMD Ryzen 3 3100", spec:"4 Core / 8 Thread, 3.6GHz base", socket:"AM4", generation:"Ryzen 3000", tdp:65, tier:1, stock:true },
+  { id:"cpu-29", category:"cpu", brand:"AMD", name:"AMD Ryzen 3 3300X", spec:"4 Core / 8 Thread, 3.8GHz base", socket:"AM4", generation:"Ryzen 3000", tdp:65, tier:1, stock:true },
+  { id:"cpu-30", category:"cpu", brand:"AMD", name:"AMD Ryzen 5 7500F", spec:"6 Core / 12 Thread, tanpa iGPU, versi ekonomis", socket:"AM5", generation:"Ryzen 7000", tdp:65, tier:2, stock:true },
+  { id:"cpu-31", category:"cpu", brand:"Intel", name:"Intel Core i3-12100F", spec:"4 Core / 8 Thread, 3.3GHz base", socket:"LGA1700", generation:"Core Gen 12", tdp:58, tier:1, stock:true },
+  { id:"cpu-32", category:"cpu", brand:"Intel", name:"Intel Core i3-13100F", spec:"4 Core / 8 Thread, 3.4GHz base", socket:"LGA1700", generation:"Core Gen 13", tdp:58, tier:1, stock:true },
+  { id:"cpu-33", category:"cpu", brand:"Intel", name:"Intel Core i9-13900K", spec:"24 Core / 32 Thread, flagship", socket:"LGA1700", generation:"Core Gen 13", tdp:125, tier:5, stock:true },
+  { id:"cpu-34", category:"cpu", brand:"Intel", name:"Intel Core i9-14900K", spec:"24 Core / 32 Thread, flagship", socket:"LGA1700", generation:"Core Gen 14", tdp:125, tier:5, stock:true },
+  { id:"cpu-35", category:"cpu", brand:"Intel", name:"Intel Core i3-10100F", spec:"4 Core / 8 Thread, 3.6GHz base", socket:"LGA1200", generation:"Core Gen 10", tdp:65, tier:1, stock:true },
+  { id:"cpu-36", category:"cpu", brand:"Intel", name:"Intel Core i9-10900K", spec:"10 Core / 20 Thread, 3.7GHz base", socket:"LGA1200", generation:"Core Gen 10", tdp:125, tier:4, stock:true },
+  { id:"cpu-37", category:"cpu", brand:"Intel", name:"Intel Core i7-11700K", spec:"8 Core / 16 Thread, 3.6GHz base", socket:"LGA1200", generation:"Core Gen 11", tdp:125, tier:4, stock:true },
+  { id:"cpu-38", category:"cpu", brand:"Intel", name:"Intel Core i3-9100F", spec:"4 Core / 4 Thread, 3.6GHz base", socket:"LGA1151", generation:"Core Gen 8-9", tdp:65, tier:1, stock:true },
+  { id:"cpu-39", category:"cpu", brand:"Intel", name:"Intel Core i7-8700K", spec:"6 Core / 12 Thread, 3.7GHz base", socket:"LGA1151", generation:"Core Gen 8-9", tdp:95, tier:3, stock:true },
+  { id:"cpu-40", category:"cpu", brand:"Intel", name:"Intel Core i3-4160", spec:"2 Core / 4 Thread, 3.6GHz base", socket:"LGA1150", generation:"Core Gen 4", tdp:54, tier:1, stock:true },
+  { id:"cpu-41", category:"cpu", brand:"Intel", name:"Intel Core i7-4790K", spec:"4 Core / 8 Thread, 4.0GHz base", socket:"LGA1150", generation:"Core Gen 4", tdp:88, tier:2, stock:true },
+  { id:"cpu-42", category:"cpu", brand:"Intel", name:"Intel Core Ultra 5 225", spec:"14 Core / 14 Thread, non-K, versi ekonomis", socket:"LGA1851", generation:"Core Ultra 200", tdp:65, tier:3, stock:true },
+  { id:"cpu-43", category:"cpu", brand:"AMD", name:"AMD Threadripper 7970X", spec:"32 Core / 64 Thread, HEDT", socket:"sTR5", generation:"Threadripper 7000", tdp:350, tier:5, stock:true },
 
   // ================= MOTHERBOARD =================
   { id:"mobo-01", category:"motherboard", brand:"AMD", name:"B650M", spec:"Micro-ATX, DDR5, PCIe 4.0", socket:"AM5", memoryType:"DDR5", formFactor:"MicroATX", tier:3, stock:true },
@@ -113,6 +147,23 @@ const PRODUCTS = [
   { id:"mobo-09", category:"motherboard", brand:"Intel", name:"B560M", spec:"Micro-ATX, DDR4", socket:"LGA1200", memoryType:"DDR4", formFactor:"MicroATX", tier:2, stock:true },
   { id:"mobo-10", category:"motherboard", brand:"Intel", name:"B365M", spec:"Micro-ATX, DDR4", socket:"LGA1151", memoryType:"DDR4", formFactor:"MicroATX", tier:1, stock:true },
   { id:"mobo-11", category:"motherboard", brand:"Intel", name:"H81M", spec:"Micro-ATX, DDR3", socket:"LGA1150", memoryType:"DDR3", formFactor:"MicroATX", tier:1, stock:true },
+  // -- Pelengkap: tiap socket sebelumnya hanya punya 1-3 pilihan motherboard
+  //    (AM4 & LGA1200/1151/1150/sTR5 paling timpang dibanding jumlah CPU-nya) --
+  { id:"mobo-12", category:"motherboard", brand:"AMD", name:"A320M", spec:"Micro-ATX, DDR4, entry-level", socket:"AM4", memoryType:"DDR4", formFactor:"MicroATX", tier:1, stock:true },
+  { id:"mobo-13", category:"motherboard", brand:"AMD", name:"B450M", spec:"Micro-ATX, DDR4, populer untuk budget build", socket:"AM4", memoryType:"DDR4", formFactor:"MicroATX", tier:1, stock:true },
+  { id:"mobo-14", category:"motherboard", brand:"AMD", name:"X570", spec:"ATX, DDR4, PCIe 4.0, high-end AM4", socket:"AM4", memoryType:"DDR4", formFactor:"ATX", tier:4, stock:true },
+  { id:"mobo-15", category:"motherboard", brand:"AMD", name:"B650", spec:"ATX, DDR5, PCIe 4.0", socket:"AM5", memoryType:"DDR5", formFactor:"ATX", tier:3, stock:true },
+  { id:"mobo-16", category:"motherboard", brand:"AMD", name:"X670", spec:"ATX, DDR5, PCIe 5.0", socket:"AM5", memoryType:"DDR5", formFactor:"ATX", tier:4, stock:true },
+  { id:"mobo-17", category:"motherboard", brand:"Intel", name:"H610", spec:"Micro-ATX, DDR4, entry-level", socket:"LGA1700", memoryType:"DDR4", formFactor:"MicroATX", tier:1, stock:true },
+  { id:"mobo-18", category:"motherboard", brand:"Intel", name:"B760", spec:"ATX, DDR5, mainstream", socket:"LGA1700", memoryType:"DDR5", formFactor:"ATX", tier:3, stock:true },
+  { id:"mobo-19", category:"motherboard", brand:"Intel", name:"Z690", spec:"ATX, DDR5, high-end", socket:"LGA1700", memoryType:"DDR5", formFactor:"ATX", tier:4, stock:true },
+  { id:"mobo-20", category:"motherboard", brand:"Intel", name:"B860", spec:"ATX, DDR5, mainstream", socket:"LGA1851", memoryType:"DDR5", formFactor:"ATX", tier:3, stock:true },
+  { id:"mobo-21", category:"motherboard", brand:"Intel", name:"H510", spec:"Micro-ATX, DDR4, entry-level", socket:"LGA1200", memoryType:"DDR4", formFactor:"MicroATX", tier:1, stock:true },
+  { id:"mobo-22", category:"motherboard", brand:"Intel", name:"Z590", spec:"ATX, DDR4, high-end", socket:"LGA1200", memoryType:"DDR4", formFactor:"ATX", tier:4, stock:true },
+  { id:"mobo-23", category:"motherboard", brand:"Intel", name:"B360M", spec:"Micro-ATX, DDR4, mainstream", socket:"LGA1151", memoryType:"DDR4", formFactor:"MicroATX", tier:2, stock:true },
+  { id:"mobo-24", category:"motherboard", brand:"Intel", name:"Z390", spec:"ATX, DDR4, high-end", socket:"LGA1151", memoryType:"DDR4", formFactor:"ATX", tier:4, stock:true },
+  { id:"mobo-25", category:"motherboard", brand:"Intel", name:"Z97", spec:"ATX, DDR3, high-end (legacy)", socket:"LGA1150", memoryType:"DDR3", formFactor:"ATX", tier:3, stock:true },
+  { id:"mobo-26", category:"motherboard", brand:"AMD", name:"WRX90", spec:"E-ATX, DDR5, workstation HEDT", socket:"sTR5", memoryType:"DDR5", formFactor:"EATX", tier:5, stock:false },
 
   // ================= RAM =================
   { id:"ram-01", category:"ram", brand:"Value", name:"DDR4 8GB", spec:"1x8GB, CL16, Single Channel, 2400MHz", memoryType:"DDR4", capacity:8, speed:"2400MHz", tier:1, stock:true, qtyMax:4 },
