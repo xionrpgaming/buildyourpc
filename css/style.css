@@ -594,13 +594,14 @@ body{ background-color:var(--bg); }
 .dot-high{ background:var(--accent); }
 
 @media (max-width:900px){
-  .landing-shell{ flex-direction:column; }
+  .landing-shell{ flex-direction:column; align-items:stretch; }
   .landing-sidebar{
     width:100%; position:static; height:auto;
     border-right:none; border-bottom:1px solid var(--border);
     flex-direction:row; flex-wrap:wrap; gap:14px 22px; align-items:center;
     padding:16px 20px;
   }
+  .landing-content{ width:100%; min-width:0; max-width:100%; }
   .sidebar-group{ flex-direction:row; flex-wrap:wrap; gap:8px; }
   .sidebar-group-title{ width:100%; margin-bottom:4px; }
 }
@@ -701,11 +702,12 @@ body{ background-color:var(--bg); }
 }
 @media (max-width:760px){
   .builder-shell{ grid-template-columns:1fr; }
-  .nav-column{ border-right:none; border-bottom:1px solid var(--border); }
+  .nav-column{ border-right:none; border-bottom:1px solid var(--border); min-width:0; }
   .code-entry-box{ border-bottom:none; }
-  #category-nav{ flex-direction:row; overflow-x:auto; }
+  #category-nav{ flex-direction:row; overflow-x:auto; min-width:0; -webkit-overflow-scrolling:touch; }
+  .nav-item{ flex:0 0 auto; white-space:nowrap; }
   #filter-panel{ border-right:none; border-bottom:1px solid var(--border); max-height:320px; }
-  #summary-panel{ flex-direction:column; }
+  #summary-panel{ flex-direction:column; flex-wrap:nowrap; overflow-x:hidden; }
 }
 
 /* ============================================================
@@ -718,12 +720,12 @@ body{ background-color:var(--bg); }
    dengan font-size di bawah 16px.
    ============================================================ */
 @media (max-width:640px){
-  .site-header{ gap:10px; }
-  .logo{ font-size:16.5px; gap:7px; }
+  .site-header{ flex-wrap:wrap; gap:8px 10px; }
+  .logo{ flex:1 1 100%; font-size:16.5px; gap:7px; }
   .logo-mark{ width:24px; height:24px; }
-  .site-header nav{ gap:14px; }
-  .site-header nav a{ font-size:13px; }
-  .btn-cta{ padding:8px 14px; font-size:12.5px; }
+  .site-header nav{ order:2; gap:14px; }
+  .site-header nav a{ font-size:13px; white-space:nowrap; }
+  .btn-cta{ order:3; margin-left:auto; padding:8px 14px; font-size:12.5px; white-space:nowrap; }
 
   .hero{ padding:64px 20px 52px; }
   .hero-eyebrow{ font-size:10.5px; padding:7px 14px; }
