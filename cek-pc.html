@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Cek PC Saya — Xion Gaming</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
+<link rel="shortcut icon" href="favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <a href="index.html" class="logo">
+    <span class="logo-mark" aria-hidden="true">
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="logoGrad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#7c5cff"/>
+            <stop offset="1" stop-color="#22d3ee"/>
+          </linearGradient>
+        </defs>
+        <rect x="2" y="2" width="60" height="60" rx="16" fill="#0b0d12" stroke="#242938" stroke-width="2"/>
+        <path d="M17 17 L47 47 M47 17 L17 47" stroke="url(#logoGrad)" stroke-width="7.5" stroke-linecap="round"/>
+        <circle cx="32" cy="32" r="4.5" fill="#22d3ee"/>
+      </svg>
+    </span>
+    Xion Gaming
+  </a>
+  <nav>
+    <a href="index.html">Beranda</a>
+    <a href="builder.html">Rakit PC</a>
+    <a href="cek-pc.html" class="current">Cek PC Saya</a>
+  </nav>
+</header>
+
+<div class="cekpc-shell">
+  <div class="cekpc-card">
+
+    <p class="cekpc-eyebrow">🩺 Cek PC Saya</p>
+    <h1 class="cekpc-title">Seberapa kuat PC kamu?</h1>
+    <p class="cekpc-desc">Samakan spek PC kamu dengan pilihan komponen yang ada di halaman Rakit PC, lalu dapatkan estimasi Gaming Check, Streaming Check, Bottleneck Check, dan Score Rating-nya.</p>
+
+    <div class="cekpc-usage" id="cekpc-usage"></div>
+    <button id="cekpc-show-member-link" class="cekpc-inline-link" type="button">Sudah punya kode member? Aktifkan di sini</button>
+
+    <div class="cekpc-form" id="cekpc-form">
+      <div class="cekpc-field">
+        <label for="cekpc-cpu">Processor (CPU)</label>
+        <select id="cekpc-cpu" class="cekpc-select"><option value="">— Pilih CPU —</option></select>
+      </div>
+      <div class="cekpc-field">
+        <label for="cekpc-gpu">VGA Card (GPU)</label>
+        <select id="cekpc-gpu" class="cekpc-select"><option value="">— Pilih VGA —</option></select>
+      </div>
+      <div class="cekpc-field">
+        <label for="cekpc-ram">RAM</label>
+        <select id="cekpc-ram" class="cekpc-select"><option value="">— Pilih RAM —</option></select>
+      </div>
+      <button id="cekpc-submit" class="btn-primary cekpc-submit-btn" type="button">Cek Sekarang</button>
+      <p class="cekpc-fineprint">*Ini estimasi berdasarkan tingkatan komponen secara umum, bukan benchmark game per judul. Kalau PC kamu bukan dari sini atau ada komponen yang tidak persis sama, pilih yang paling mendekati.</p>
+    </div>
+
+    <div class="cekpc-results hidden" id="cekpc-results">
+      <div class="cekpc-result-row">
+        <span class="cekpc-result-icon">🎮</span>
+        <div>
+          <p class="cekpc-result-title">Gaming Check</p>
+          <p class="cekpc-result-text" id="cekpc-gaming-text"></p>
+        </div>
+      </div>
+      <div class="cekpc-result-row">
+        <span class="cekpc-result-icon">📹</span>
+        <div>
+          <p class="cekpc-result-title">Streaming Check</p>
+          <p class="cekpc-result-text" id="cekpc-streaming-text"></p>
+        </div>
+      </div>
+      <div class="cekpc-result-row">
+        <span class="cekpc-result-icon">⚖️</span>
+        <div>
+          <p class="cekpc-result-title">Bottleneck Check</p>
+          <p class="cekpc-result-text" id="cekpc-bottleneck-text"></p>
+        </div>
+      </div>
+
+      <div class="cekpc-score-block">
+        <p class="panel-subtitle" style="text-align:center;">Score Rating</p>
+        <div id="cekpc-score-wrap"></div>
+      </div>
+
+      <div class="cekpc-result-actions">
+        <button id="cekpc-wa-btn" class="btn-wa" type="button">Tanya Rekomendasi Upgrade via WhatsApp</button>
+        <button id="cekpc-again-btn" class="btn-secondary" type="button">Cek Komponen Lain</button>
+      </div>
+    </div>
+
+    <div class="cekpc-limit-box hidden" id="cekpc-limit-box">
+      <h2 class="cekpc-limit-title">Jatah Cek Hari Ini Habis</h2>
+      <p class="cekpc-limit-desc">Gratis 1x cek per hari. Mau cek lebih sering? Upgrade ke member harian di bawah ini.</p>
+
+      <div class="cekpc-pricing-grid">
+        <div class="cekpc-price-card">
+          <p class="cekpc-price-limit">10x / hari</p>
+          <p class="cekpc-price-amount">Rp5.000<span>/bulan</span></p>
+          <a class="btn-secondary cekpc-price-btn" target="_blank" rel="noopener" href="https://wa.me/6285814565849?text=Halo%2C%20saya%20mau%20upgrade%20membership%20Cek%20PC%20Saya%20tier%2010x%2Fhari%20(Rp5.000%2Fbulan).">Upgrade</a>
+        </div>
+        <div class="cekpc-price-card">
+          <p class="cekpc-price-limit">50x / hari</p>
+          <p class="cekpc-price-amount">Rp10.000<span>/bulan</span></p>
+          <a class="btn-secondary cekpc-price-btn" target="_blank" rel="noopener" href="https://wa.me/6285814565849?text=Halo%2C%20saya%20mau%20upgrade%20membership%20Cek%20PC%20Saya%20tier%2050x%2Fhari%20(Rp10.000%2Fbulan).">Upgrade</a>
+        </div>
+        <div class="cekpc-price-card">
+          <p class="cekpc-price-limit">100x / hari</p>
+          <p class="cekpc-price-amount">Rp15.000<span>/bulan</span></p>
+          <a class="btn-secondary cekpc-price-btn" target="_blank" rel="noopener" href="https://wa.me/6285814565849?text=Halo%2C%20saya%20mau%20upgrade%20membership%20Cek%20PC%20Saya%20tier%20100x%2Fhari%20(Rp15.000%2Fbulan).">Upgrade</a>
+        </div>
+      </div>
+
+      <div class="cekpc-code-box">
+        <label for="cekpc-member-input">Sudah punya kode member?</label>
+        <div class="load-row">
+          <input type="text" id="cekpc-member-input" class="text-input" placeholder="Tempel kode member di sini (contoh: XGM1-...)">
+          <button id="cekpc-member-btn" class="btn-secondary" type="button">Aktifkan</button>
+        </div>
+      </div>
+      <p class="cekpc-honesty-note">Catatan: sistem kode member ini berbasis kepercayaan (situs statis, tanpa server), bukan sistem pembayaran otomatis. Kode dikirim manual oleh admin setelah pembayaran dikonfirmasi.</p>
+    </div>
+
+  </div>
+</div>
+
+<script src="js/products-data.js"></script>
+<script src="js/build-shared.js"></script>
+<script src="js/membership-shared.js"></script>
+<script src="js/cekpc.js"></script>
+<script src="js/animations.js"></script>
+</body>
+</html>
