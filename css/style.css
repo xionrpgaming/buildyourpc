@@ -758,3 +758,109 @@ body{ background-color:var(--bg); }
     padding-right:calc(20px + env(safe-area-inset-right));
   }
 }
+
+/* ============================================================
+   CEK PC SAYA (cek-pc.html)
+   ------------------------------------------------------------
+   Reuse token/warna yang sama dengan hasil.html (.result-shell
+   dkk) supaya konsisten, tapi kelas sendiri karena strukturnya
+   beda (form picker + limit harian, bukan ringkasan rakitan).
+   ============================================================ */
+.cekpc-shell{
+  max-width:720px; margin:0 auto; padding:40px 20px 80px;
+  min-height:calc(100vh - 65px);
+}
+.cekpc-card{
+  background:var(--panel); border:1px solid var(--border); border-radius:18px;
+  padding:30px 26px 32px;
+}
+.cekpc-eyebrow{
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:var(--font-mono); color:var(--accent); font-size:12px;
+  letter-spacing:.1em; text-transform:uppercase;
+  background:var(--accent-soft); border:1px solid rgba(124,92,255,.35);
+  border-radius:999px; padding:7px 16px; margin:0 0 16px;
+}
+.cekpc-title{ font-family:var(--font-display); font-size:28px; margin:0 0 10px; }
+.cekpc-desc{ color:var(--muted); font-size:14.5px; line-height:1.6; margin:0 0 22px; max-width:560px; }
+
+.cekpc-usage{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px; }
+.cekpc-usage-pill{
+  font-family:var(--font-mono); font-size:12px; color:var(--text);
+  background:var(--panel-alt); border:1px solid var(--border);
+  border-radius:999px; padding:7px 14px;
+}
+.cekpc-usage-pill strong{ color:var(--accent); }
+.cekpc-usage-member{ color:var(--ok); border-color:rgba(53,208,143,.35); }
+.cekpc-inline-link{
+  background:none; border:none; color:var(--accent); font-size:12.5px;
+  font-weight:600; padding:0; margin:0 0 22px; cursor:pointer; text-decoration:underline;
+}
+.cekpc-inline-link:hover{ color:var(--cyan); }
+
+.cekpc-form{ display:flex; flex-direction:column; gap:16px; }
+.cekpc-field{ display:flex; flex-direction:column; gap:6px; }
+.cekpc-field label{ font-size:13px; font-weight:600; color:var(--text); }
+.cekpc-select{
+  width:100%; background:var(--panel-alt); border:1px solid var(--border);
+  color:var(--text); border-radius:10px; padding:12px 13px; font-size:14px;
+  font-family:var(--font-body);
+}
+.cekpc-select:focus{ outline:none; border-color:var(--accent); }
+.cekpc-submit-btn{ width:100%; text-align:center; border:none; margin-top:4px; }
+.cekpc-fineprint{ font-size:11.5px; color:var(--muted); line-height:1.6; margin:2px 0 0; }
+
+.cekpc-results{ display:flex; flex-direction:column; gap:14px; }
+.cekpc-result-row{
+  display:flex; gap:12px; align-items:flex-start;
+  background:var(--panel-alt); border:1px solid var(--border);
+  border-radius:12px; padding:14px 16px;
+}
+.cekpc-result-icon{ font-size:20px; flex:0 0 auto; line-height:1; margin-top:2px; }
+.cekpc-result-title{ font-weight:700; font-size:14px; margin:0 0 4px; }
+.cekpc-result-text{ color:var(--muted); font-size:13px; line-height:1.55; margin:0; }
+
+.cekpc-score-block{
+  background:var(--panel-alt); border:1px solid var(--border);
+  border-radius:12px; padding:18px; margin-top:4px;
+}
+.cekpc-result-actions{ display:flex; flex-direction:column; gap:10px; margin-top:6px; }
+
+.cekpc-limit-box{
+  border-top:1px solid var(--border); margin-top:26px; padding-top:24px;
+}
+.cekpc-limit-title{ font-family:var(--font-display); font-size:20px; margin:0 0 8px; }
+.cekpc-limit-desc{ color:var(--muted); font-size:13.5px; margin:0 0 20px; }
+
+.cekpc-pricing-grid{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:12px; margin-bottom:22px;
+}
+.cekpc-price-card{
+  background:var(--panel-alt); border:1px solid var(--border); border-radius:14px;
+  padding:18px 14px; text-align:center; display:flex; flex-direction:column; gap:8px;
+}
+.cekpc-price-limit{ font-weight:700; font-size:14px; margin:0; }
+.cekpc-price-amount{ font-family:var(--font-display); font-size:19px; color:var(--accent); margin:0; }
+.cekpc-price-amount span{ font-family:var(--font-body); font-size:11px; color:var(--muted); font-weight:400; }
+.cekpc-price-btn{ text-align:center; text-decoration:none; margin-top:4px; }
+
+.cekpc-code-box{ display:flex; flex-direction:column; gap:8px; margin-bottom:14px; }
+.cekpc-code-box label{ font-size:13px; font-weight:600; }
+.cekpc-honesty-note{ font-size:11.5px; color:var(--muted); opacity:.75; line-height:1.6; margin:0; }
+
+@media (max-width:560px){
+  .cekpc-shell{ padding:24px 14px 60px; }
+  .cekpc-card{ padding:22px 18px 26px; }
+  .cekpc-title{ font-size:23px; }
+}
+
+/* ---------- ADMIN: generator kode member ---------- */
+.admin-shell{
+  max-width:520px; margin:40px auto 80px; padding:0 20px;
+}
+.admin-card{
+  background:var(--panel); border:1px solid var(--warn); border-radius:18px;
+  padding:28px 24px 30px; display:flex; flex-direction:column; gap:16px;
+}
+.admin-wa-send{ display:block; text-align:center; text-decoration:none; margin-top:10px; }
