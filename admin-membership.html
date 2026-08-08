@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Approve Membership (Admin) — Xion Gaming</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="adminm-shell">
+  <div class="adminm-card">
+    <p class="cekpc-eyebrow">🔒 Khusus Admin</p>
+    <h1 class="cekpc-title" style="font-size:24px;">Approve Membership "Cek PC Saya"</h1>
+    <p class="cekpc-desc">Halaman ini tidak ditautkan di menu manapun. Login pakai akun Google admin, lalu setujui/tolak permintaan upgrade setelah pembayaran dikonfirmasi via WhatsApp.</p>
+
+    <div id="adminm-auth-guest">
+      <button id="adminm-login-btn" class="btn-secondary cekpc-google-btn" type="button">
+        <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 3l6-6C34 5.1 29.3 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21 21-9.4 21-21c0-1.4-.1-2.7-.4-4z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.9 18.9 13 24 13c3.1 0 5.8 1.1 8 3l6-6C34 5.1 29.3 3 24 3 16.1 3 9.2 7.5 6.3 14.7z"/><path fill="#4CAF50" d="M24 45c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 36.5 26.7 37 24 37c-5.2 0-9.6-3.3-11.2-8l-6.5 5C9.1 40.4 16 45 24 45z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.2 4.2-4.1 5.6l6.2 5.2C40.9 36.2 45 30.6 45 24c0-1.4-.1-2.7-.4-3.5z"/></svg>
+        Login dengan Google
+      </button>
+    </div>
+
+    <div id="adminm-not-admin" class="hidden">
+      <p class="cekpc-auth-desc">Akun <strong id="adminm-wrong-email"></strong> bukan akun admin. <button id="adminm-logout-btn-1" class="cekpc-inline-link" type="button">Logout</button></p>
+    </div>
+
+    <div id="adminm-panel" class="hidden">
+      <p class="cekpc-auth-desc">Login sebagai <strong id="adminm-email"></strong> — <button id="adminm-logout-btn-2" class="cekpc-inline-link" type="button">logout</button></p>
+      <div id="adminm-list"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="js/firebase-membership.js"></script>
+<script>
+(function(){
+  function $(s){ return document.querySelector(s); }
+
+  function showState(state){
+    $("#adminm-auth-guest").classList.toggle("hidden", state !== "guest");
+    $("#adminm-not-admin").classList.toggle("hidden", state !== "not-admin");
+    $("#adminm-panel").classList.toggle("hidden", state !== "admin");
+  }
+
+  async function renderList(){
+    const listEl = $("#adminm-list");
+    listEl.innerHTML = `<p class="adminm-empty">Memuat...</p>`;
+    let items;
+    try{
+      items = await listPendingMembers();
+    } catch(err){
+      listEl.innerHTML = `<p class="adminm-empty">Gagal memuat data: ${err.message}</p>`;
+      return;
+    }
+    if(!items.length){
+      listEl.innerHTML = `<p class="adminm-empty">Tidak ada permintaan upgrade yang menunggu saat ini.</p>`;
+      return;
+    }
+    listEl.innerHTML = items.map(m => `
+      <div class="adminm-request" data-uid="${m.id}" data-tier="${m.pendingRequest ? m.pendingRequest.tier : 0}">
+        <div class="adminm-request-info">
+          <strong>${m.email || m.id}</strong>
+          Minta tier <strong>${m.pendingRequest ? m.pendingRequest.tier : "?"}x/hari</strong>
+        </div>
+        <div class="adminm-request-actions">
+          <input type="number" class="text-input adminm-days-input" value="30" min="1" max="365" title="Durasi (hari)">
+          <button class="btn-secondary adminm-btn-approve" type="button">Setujui</button>
+          <button class="btn-secondary adminm-btn-reject" type="button">Tolak</button>
+        </div>
+      </div>
+    `).join("");
+
+    listEl.querySelectorAll(".adminm-request").forEach(row=>{
+      const uid = row.dataset.uid;
+      const tierVal = row.dataset.tier;
+      row.querySelector(".adminm-btn-approve").addEventListener("click", async ()=>{
+        const days = row.querySelector(".adminm-days-input").value || 30;
+        try{
+          await approveMember(uid, tierVal, days);
+          renderList();
+        } catch(err){
+          alert("Gagal approve: " + err.message);
+        }
+      });
+      row.querySelector(".adminm-btn-reject").addEventListener("click", async ()=>{
+        if(!confirm("Tolak permintaan ini?")) return;
+        try{
+          await rejectMember(uid);
+          renderList();
+        } catch(err){
+          alert("Gagal menolak: " + err.message);
+        }
+      });
+    });
+  }
+
+  $("#adminm-login-btn").addEventListener("click", ()=>{
+    signInWithGoogle().catch(err=> alert("Login gagal: " + err.message));
+  });
+  $("#adminm-logout-btn-1").addEventListener("click", signOutUser);
+  $("#adminm-logout-btn-2").addEventListener("click", signOutUser);
+
+  onAuthChange((user)=>{
+    if(!user){
+      showState("guest");
+      return;
+    }
+    if(user.email !== ADMIN_EMAIL){
+      $("#adminm-wrong-email").textContent = user.email;
+      showState("not-admin");
+      return;
+    }
+    $("#adminm-email").textContent = user.email;
+    showState("admin");
+    renderList();
+  });
+})();
+</script>
+</body>
+</html>
