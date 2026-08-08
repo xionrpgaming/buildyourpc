@@ -864,3 +864,53 @@ body{ background-color:var(--bg); }
   padding:28px 24px 30px; display:flex; flex-direction:column; gap:16px;
 }
 .admin-wa-send{ display:block; text-align:center; text-decoration:none; margin-top:10px; }
+
+/* ---------- CEK PC SAYA — tab hasil (Gaming/Streaming/Bottleneck) ---------- */
+.cekpc-tabs{
+  display:flex; gap:6px; margin-bottom:18px; overflow-x:auto;
+  border-bottom:1px solid var(--border);
+}
+.cekpc-tab{
+  flex:0 0 auto; background:none; border:none; color:var(--muted);
+  font-size:13px; font-weight:700; padding:10px 14px; border-bottom:2px solid transparent;
+  white-space:nowrap;
+}
+.cekpc-tab.active{ color:var(--accent); border-bottom-color:var(--accent); }
+.cekpc-tab-panel{ display:flex; flex-direction:column; gap:14px; }
+
+.cekpc-verdict{ font-size:14px; line-height:1.6; margin:0; text-align:center; }
+.cekpc-verdict strong{ color:var(--accent); }
+
+.cekpc-notes{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; }
+.cekpc-note{
+  font-size:13px; line-height:1.55; padding:10px 12px; border-radius:10px;
+  background:var(--panel-alt); border:1px solid var(--border);
+}
+.cekpc-note-bad{ border-color:rgba(239,88,102,.4); color:var(--danger); }
+.cekpc-note-warn{ border-color:rgba(245,185,77,.4); color:var(--warn); }
+.cekpc-note-good{ border-color:rgba(53,208,143,.4); color:var(--ok); }
+
+.cekpc-capacity-block{
+  background:var(--panel-alt); border:1px solid var(--border); border-radius:12px;
+  padding:18px; text-align:center;
+}
+.cekpc-capacity-badge{
+  display:inline-block; margin-top:6px; padding:10px 22px; border-radius:999px;
+  font-family:var(--font-display); font-weight:700; font-size:16px;
+}
+.cekpc-capacity-none{ background:rgba(239,88,102,.15); color:var(--danger); }
+.cekpc-capacity-single{ background:rgba(245,185,77,.15); color:var(--warn); }
+.cekpc-capacity-double{ background:rgba(34,211,238,.15); color:var(--cyan); }
+.cekpc-capacity-multi{ background:rgba(53,208,143,.15); color:var(--ok); }
+
+.cekpc-bottleneck-bars{
+  display:flex; flex-direction:column; gap:14px;
+  background:var(--panel-alt); border:1px solid var(--border); border-radius:12px; padding:18px;
+}
+.cekpc-bar-row{ display:flex; flex-direction:column; gap:6px; }
+.cekpc-bar-label{ display:flex; justify-content:space-between; font-size:13px; font-weight:700; }
+.cekpc-bar-sub{ font-weight:400; color:var(--muted); font-size:12px; }
+.cekpc-bar-track{ height:8px; border-radius:999px; background:var(--panel); overflow:hidden; }
+.cekpc-bar-fill{ height:100%; border-radius:999px; background:linear-gradient(90deg, var(--accent), var(--cyan)); }
+.cekpc-bar-weak .cekpc-bar-label{ color:var(--warn); }
+.cekpc-bar-weak .cekpc-bar-fill{ background:var(--warn); }
