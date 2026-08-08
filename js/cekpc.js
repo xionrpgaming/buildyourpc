@@ -15,6 +15,38 @@
 
   function $(sel){ return document.querySelector(sel); }
 
+  /* ---------- Limit cek harian (localStorage, tetap anonim untuk gratisan) ---------- */
+  const USAGE_STORAGE_KEY = "xion_cekpc_usage_v1";
+  const FREE_DAILY_LIMIT = 1;
+
+  function todayStr(){ return new Date().toISOString().slice(0,10); }
+
+  function getUsageToday(){
+    try{
+      const raw = localStorage.getItem(USAGE_STORAGE_KEY);
+      const saved = raw ? JSON.parse(raw) : null;
+      if(!saved || saved.date !== todayStr()) return 0;
+      return Number(saved.count) || 0;
+    } catch(e){ return 0; }
+  }
+  function incrementUsageToday(){
+    const count = getUsageToday() + 1;
+    localStorage.setItem(USAGE_STORAGE_KEY, JSON.stringify({ date: todayStr(), count }));
+    return count;
+  }
+
+  /* ---------- Status login & membership (dari Firebase) ---------- */
+  let currentUser = null;      // firebase.User | null
+  let currentMemberDoc = null; // { tier, expiresAt, hasPending, pendingRequest } | null
+
+  function getDailyLimit(){
+    if(currentMemberDoc && isMembershipActive(currentMemberDoc)) return currentMemberDoc.tier;
+    return FREE_DAILY_LIMIT;
+  }
+  function getRemainingToday(){
+    return Math.max(0, getDailyLimit() - getUsageToday());
+  }
+
   function populateSelect(selectEl, category){
     const items = PRODUCTS
       .filter(p => p.category === category)
@@ -138,10 +170,10 @@
     const box = $("#cekpc-usage");
     const remaining = getRemainingToday();
     const limit = getDailyLimit();
-    const member = getActiveMembership();
+    const active = currentMemberDoc && isMembershipActive(currentMemberDoc);
     box.innerHTML = `
       <span class="cekpc-usage-pill">Sisa cek hari ini: <strong>${remaining}/${limit}</strong></span>
-      ${member ? `<span class="cekpc-usage-pill cekpc-usage-member">✓ Member ${member.tier}x/hari s.d. ${member.exp}</span>` : ""}
+      ${active ? `<span class="cekpc-usage-pill cekpc-usage-member">✓ Member ${currentMemberDoc.tier}x/hari s.d. ${currentMemberDoc.expiresAt}</span>` : ""}
     `;
   }
 
@@ -195,6 +227,36 @@
       `;
     }).join("");
     $("#cekpc-bottleneck-verdict").innerHTML = result.verdict;
+  }
+
+  function renderAuthUI(){
+    const guestBlock = $("#cekpc-auth-guest");
+    const userBlock = $("#cekpc-auth-user");
+
+    if(!currentUser){
+      guestBlock.classList.remove("hidden");
+      userBlock.classList.add("hidden");
+      return;
+    }
+    guestBlock.classList.add("hidden");
+    userBlock.classList.remove("hidden");
+    $("#cekpc-user-email").textContent = currentUser.email;
+
+    const pricingGrid = $("#cekpc-pricing-grid");
+    const pendingBox = $("#cekpc-pending-status");
+    const active = currentMemberDoc && isMembershipActive(currentMemberDoc);
+
+    if(currentMemberDoc && currentMemberDoc.hasPending){
+      pricingGrid.classList.add("hidden");
+      pendingBox.classList.remove("hidden");
+      $("#cekpc-pending-tier").textContent = currentMemberDoc.pendingRequest ? currentMemberDoc.pendingRequest.tier : "?";
+    } else if(active){
+      pricingGrid.classList.add("hidden");
+      pendingBox.classList.add("hidden");
+    } else {
+      pricingGrid.classList.remove("hidden");
+      pendingBox.classList.add("hidden");
+    }
   }
 
   function switchTab(tab){
@@ -291,18 +353,58 @@
       window.open(`https://wa.me/${WA_NUMBER}?text=${text}`, "_blank");
     });
 
-    $("#cekpc-member-btn").addEventListener("click", ()=>{
-      const raw = $("#cekpc-member-input").value;
-      const decoded = decodeMemberCode(raw);
-      if(!decoded){
-        alert("Kode member tidak valid atau sudah kadaluarsa. Cek lagi kodenya atau hubungi admin.");
-        return;
+    $("#cekpc-google-login-btn").addEventListener("click", ()=>{
+      signInWithGoogle().catch(err=>{
+        console.error(err);
+        alert("Login gagal: " + (err && err.message ? err.message : "coba lagi ya."));
+      });
+    });
+
+    $("#cekpc-logout-btn").addEventListener("click", ()=>{
+      signOutUser();
+    });
+
+    document.querySelectorAll(".cekpc-price-btn").forEach(btn=>{
+      btn.addEventListener("click", async ()=>{
+        if(!currentUser){
+          alert("Login dulu ya sebelum upgrade.");
+          return;
+        }
+        const tier = btn.dataset.tier;
+        try{
+          await requestMembershipUpgrade(currentUser.uid, tier);
+          currentMemberDoc = await getMemberDoc(currentUser.uid);
+          renderAuthUI();
+          const waText = encodeURIComponent(
+            `Halo, saya (${currentUser.email}) mau upgrade membership Cek PC Saya ke tier ${tier}x/hari. Sudah saya ajukan di web — mohon dikonfirmasi setelah pembayaran saya kirim ya.`
+          );
+          window.open(`https://wa.me/${WA_NUMBER}?text=${waText}`, "_blank");
+        } catch(err){
+          console.error(err);
+          alert("Gagal mengajukan upgrade: " + (err && err.message ? err.message : "coba lagi ya."));
+        }
+      });
+    });
+
+    onAuthChange(async (user)=>{
+      currentUser = user;
+      if(user){
+        try{
+          currentMemberDoc = await ensureMemberDoc(user);
+        } catch(err){
+          console.error(err);
+          currentMemberDoc = null;
+        }
+      } else {
+        currentMemberDoc = null;
       }
-      saveActiveMembership(raw.trim());
       renderUsageBadge();
-      $("#cekpc-limit-box").classList.add("hidden");
-      $("#cekpc-form").classList.remove("hidden");
-      alert(`Member ${decoded.tier}x/hari aktif sampai ${decoded.exp}. Selamat mencoba!`);
+      renderAuthUI();
+      if(getRemainingToday() <= 0){
+        $("#cekpc-limit-box").classList.remove("hidden");
+      } else {
+        $("#cekpc-limit-box").classList.add("hidden");
+      }
     });
   });
 })();
