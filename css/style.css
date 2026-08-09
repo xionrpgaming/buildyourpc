@@ -914,3 +914,57 @@ body{ background-color:var(--bg); }
 .cekpc-bar-fill{ height:100%; border-radius:999px; background:linear-gradient(90deg, var(--accent), var(--cyan)); }
 .cekpc-bar-weak .cekpc-bar-label{ color:var(--warn); }
 .cekpc-bar-weak .cekpc-bar-fill{ background:var(--warn); }
+
+/* ---------- CEK PC SAYA — pemilihan mode (Gaming / +Streaming / +Multi-Streaming) ---------- */
+.cekpc-mode-select{ display:flex; flex-direction:column; gap:10px; margin-top:6px; }
+.cekpc-mode-heading{ font-weight:700; font-size:14px; margin:0 0 4px; }
+.cekpc-mode-card{
+  display:flex; flex-direction:column; align-items:flex-start; gap:4px;
+  text-align:left; background:var(--panel-alt); border:1px solid var(--border);
+  border-radius:12px; padding:16px 18px; transition:border-color .15s ease, transform .15s ease;
+}
+.cekpc-mode-card:hover{ border-color:var(--accent); transform:translateY(-2px); }
+.cekpc-mode-icon{ font-size:20px; }
+.cekpc-mode-name{ font-weight:700; font-size:14.5px; color:var(--text); }
+.cekpc-mode-desc{ font-size:12.5px; color:var(--muted); }
+
+.cekpc-mode-verdict{
+  text-align:center; font-size:15px; font-weight:700; margin:0 0 4px; padding:12px; border-radius:10px;
+}
+.cekpc-mode-verdict.ok{ background:rgba(53,208,143,.12); color:var(--ok); }
+.cekpc-mode-verdict.bad{ background:rgba(239,88,102,.12); color:var(--danger); }
+
+/* ---------- CEK PC SAYA — Google login & status membership ---------- */
+.cekpc-auth-block{ margin-bottom:18px; }
+.cekpc-google-btn{
+  display:inline-flex; align-items:center; gap:10px;
+  background:#fff; color:#1f1f1f; border:1px solid #dadce0;
+  font-weight:600;
+}
+.cekpc-google-btn:hover{ background:#f7f7f7; border-color:#dadce0; color:#1f1f1f; }
+.cekpc-auth-desc{ font-size:13px; color:var(--muted); margin:0 0 16px; }
+.cekpc-auth-desc strong{ color:var(--text); }
+.cekpc-pending-box{
+  background:rgba(245,185,77,.1); border:1px solid rgba(245,185,77,.4);
+  border-radius:12px; padding:14px 16px; margin-bottom:14px;
+}
+.cekpc-pending-box p{ margin:0; font-size:13.5px; color:var(--warn); }
+
+/* ---------- ADMIN MEMBERSHIP ---------- */
+.adminm-shell{ max-width:720px; margin:40px auto 80px; padding:0 20px; }
+.adminm-card{
+  background:var(--panel); border:1px solid var(--warn); border-radius:18px;
+  padding:28px 24px 30px;
+}
+.adminm-request{
+  display:flex; flex-wrap:wrap; align-items:center; gap:12px; justify-content:space-between;
+  background:var(--panel-alt); border:1px solid var(--border); border-radius:12px;
+  padding:14px 16px; margin-bottom:12px;
+}
+.adminm-request-info{ font-size:13.5px; }
+.adminm-request-info strong{ display:block; font-size:14.5px; margin-bottom:2px; }
+.adminm-request-actions{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.adminm-days-input{ width:70px; }
+.adminm-empty{ color:var(--muted); font-size:14px; text-align:center; padding:30px 0; }
+.adminm-btn-approve{ background:var(--ok); border-color:var(--ok); color:#06210f; }
+.adminm-btn-reject{ background:transparent; border-color:var(--danger); color:var(--danger); }
