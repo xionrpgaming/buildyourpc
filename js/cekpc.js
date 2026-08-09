@@ -21,17 +21,23 @@
 
   function todayStr(){ return new Date().toISOString().slice(0,10); }
 
+  function getEffectiveTierKey(){
+    return (currentMemberDoc && isMembershipActive(currentMemberDoc)) ? currentMemberDoc.tier : 0;
+  }
+
   function getUsageToday(){
     try{
       const raw = localStorage.getItem(USAGE_STORAGE_KEY);
       const saved = raw ? JSON.parse(raw) : null;
       if(!saved || saved.date !== todayStr()) return 0;
+      // kalau tier efektif berubah (baru login/baru di-approve member), mulai hitungan segar
+      if(saved.tierKey !== getEffectiveTierKey()) return 0;
       return Number(saved.count) || 0;
     } catch(e){ return 0; }
   }
   function incrementUsageToday(){
     const count = getUsageToday() + 1;
-    localStorage.setItem(USAGE_STORAGE_KEY, JSON.stringify({ date: todayStr(), count }));
+    localStorage.setItem(USAGE_STORAGE_KEY, JSON.stringify({ date: todayStr(), count, tierKey: getEffectiveTierKey() }));
     return count;
   }
 
@@ -203,12 +209,34 @@
     $("#cekpc-gaming-notes").innerHTML = result.notes.map(n=>`<li class="cekpc-note cekpc-note-${n.type}">${n.text}</li>`).join("");
   }
 
-  function renderStreamingTab(result){
+  const STREAM_LEVELS = ["Belum Disarankan", "Single Stream", "Double Stream", "Multiple Stream"];
+
+  function renderStreamingTab(result, mode){
     $("#cekpc-streaming-badge").textContent = result.capacity;
     $("#cekpc-streaming-badge").className = "cekpc-capacity-badge cekpc-capacity-" +
       (result.capacity === "Belum Disarankan" ? "none" : result.capacity === "Single Stream" ? "single" : result.capacity === "Double Stream" ? "double" : "multi");
     $("#cekpc-streaming-verdict").innerHTML = result.verdict;
     $("#cekpc-streaming-notes").innerHTML = result.notes.map(n=>`<li class="cekpc-note cekpc-note-${n.type}">${n.text}</li>`).join("");
+
+    const have = STREAM_LEVELS.indexOf(result.capacity);
+    const modeVerdictEl = $("#cekpc-streaming-modeverdict");
+    if(mode === "gaming-streaming"){
+      const need = STREAM_LEVELS.indexOf("Single Stream");
+      const ok = have >= need;
+      modeVerdictEl.innerHTML = ok
+        ? `✅ <strong>Bisa</strong> gaming sambil streaming ke 1 platform.`
+        : `❌ <strong>Belum cukup</strong> untuk gaming sambil streaming — kapasitas kamu saat ini "${result.capacity}".`;
+      modeVerdictEl.className = "cekpc-mode-verdict " + (ok ? "ok" : "bad");
+    } else if(mode === "gaming-multistreaming"){
+      const need = STREAM_LEVELS.indexOf("Multiple Stream");
+      const ok = have >= need;
+      modeVerdictEl.innerHTML = ok
+        ? `✅ <strong>Bisa</strong> gaming sambil multistream ke beberapa platform sekaligus.`
+        : `❌ <strong>Belum cukup</strong> untuk multistreaming — kapasitas kamu saat ini "${result.capacity}", minimal butuh "Multiple Stream".`;
+      modeVerdictEl.className = "cekpc-mode-verdict " + (ok ? "ok" : "bad");
+    } else {
+      modeVerdictEl.textContent = "";
+    }
   }
 
   function renderBottleneckTab(result){
@@ -259,6 +287,8 @@
     }
   }
 
+  let selectedMode = null; // "gaming" | "gaming-streaming" | "gaming-multistreaming"
+
   function switchTab(tab){
     document.querySelectorAll(".cekpc-tab").forEach(btn=>{
       btn.classList.toggle("active", btn.dataset.tab === tab);
@@ -286,37 +316,44 @@
     incrementUsageToday();
     renderUsageBadge();
 
-    const gaming = gamingCheck(cpu, gpu, ram.capacity);
-    const streaming = streamingCheck(cpu, gpu, ram.capacity);
-    const bottleneck = bottleneckCheck(cpu, gpu, ram.capacity);
+    const needsStreaming = selectedMode === "gaming-streaming" || selectedMode === "gaming-multistreaming";
 
+    const gaming = gamingCheck(cpu, gpu, ram.capacity);
+    const bottleneck = bottleneckCheck(cpu, gpu, ram.capacity);
     renderGamingTab(gaming);
-    renderStreamingTab(streaming);
     renderBottleneckTab(bottleneck);
+
+    let streaming = null;
+    $("#cekpc-tab-streaming-btn").classList.toggle("hidden", !needsStreaming);
+    if(needsStreaming){
+      streaming = streamingCheck(cpu, gpu, ram.capacity);
+      renderStreamingTab(streaming, selectedMode);
+    }
+
     switchTab("gaming");
 
     $("#cekpc-form").classList.add("hidden");
     $("#cekpc-results").classList.remove("hidden");
     $("#cekpc-limit-box").classList.add("hidden");
 
-    window._cekpcLast = { cpu, gpu, ram, gaming, streaming, bottleneck };
+    window._cekpcLast = { cpu, gpu, ram, gaming, streaming, bottleneck, mode: selectedMode };
   }
 
   function waMessage(){
     const last = window._cekpcLast;
     if(!last) return "Halo, saya habis pakai Cek PC Saya, mau tanya rekomendasi upgrade.";
-    return [
+    const lines = [
       "Halo, saya habis cek PC lewat fitur Cek PC Saya, ini hasilnya:",
       "",
       `- CPU: ${last.cpu.name}`,
       `- VGA: ${last.gpu.name}`,
       `- RAM: ${last.ram.name}`,
       `- Gaming: ${last.gaming.score}/100 (${last.gaming.classLabel})`,
-      `- Streaming: ${last.streaming.capacity}`,
-      `- Bottleneck: ${last.bottleneck.weakKeys.length ? last.bottleneck.weakKeys.join(", ").toUpperCase() + " jadi titik lemah" : "seimbang"}`,
-      "",
-      "Mohon rekomendasi upgrade komponen yang paling worth-it ya, terima kasih!"
-    ].join("\n");
+    ];
+    if(last.streaming) lines.push(`- Streaming: ${last.streaming.capacity}`);
+    lines.push(`- Bottleneck: ${last.bottleneck.weakKeys.length ? last.bottleneck.weakKeys.join(", ").toUpperCase() + " jadi titik lemah" : "seimbang"}`);
+    lines.push("", "Mohon rekomendasi upgrade komponen yang paling worth-it ya, terima kasih!");
+    return lines.join("\n");
   }
 
   document.addEventListener("DOMContentLoaded", ()=>{
@@ -330,6 +367,19 @@
     }
 
     $("#cekpc-submit").addEventListener("click", runCheck);
+
+    document.querySelectorAll(".cekpc-mode-card").forEach(card=>{
+      card.addEventListener("click", ()=>{
+        selectedMode = card.dataset.mode;
+        $("#cekpc-mode-select").classList.add("hidden");
+        $("#cekpc-form").classList.remove("hidden");
+      });
+    });
+
+    $("#cekpc-change-mode-btn").addEventListener("click", ()=>{
+      $("#cekpc-form").classList.add("hidden");
+      $("#cekpc-mode-select").classList.remove("hidden");
+    });
 
     $("#cekpc-show-member-link").addEventListener("click", ()=>{
       $("#cekpc-limit-box").classList.toggle("hidden");
