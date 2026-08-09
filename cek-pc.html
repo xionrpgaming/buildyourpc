@@ -44,12 +44,32 @@
 
     <p class="cekpc-eyebrow">🩺 Cek PC Saya</p>
     <h1 class="cekpc-title">Seberapa kuat PC kamu?</h1>
-    <p class="cekpc-desc">Samakan spek PC kamu dengan pilihan komponen yang ada di halaman Rakit PC, lalu dapatkan estimasi Gaming Check, Streaming Check, Bottleneck Check, dan Score Rating-nya.</p>
+    <p class="cekpc-desc">Samakan spek PC kamu dengan pilihan komponen yang ada di halaman Rakit PC, lalu dapatkan estimasi kompatibilitas + rekomendasi upgrade kalau ada yang kurang.</p>
 
     <div class="cekpc-usage" id="cekpc-usage"></div>
     <button id="cekpc-show-member-link" class="cekpc-inline-link" type="button">Kelola membership saya</button>
 
-    <div class="cekpc-form" id="cekpc-form">
+    <div class="cekpc-mode-select" id="cekpc-mode-select">
+      <p class="cekpc-mode-heading">Mau cek yang mana?</p>
+      <button class="cekpc-mode-card" data-mode="gaming" type="button">
+        <span class="cekpc-mode-icon">🎮</span>
+        <span class="cekpc-mode-name">Gaming Compatibility</span>
+        <span class="cekpc-mode-desc">Cek murni buat main game — skor & kelas game yang cocok.</span>
+      </button>
+      <button class="cekpc-mode-card" data-mode="gaming-streaming" type="button">
+        <span class="cekpc-mode-icon">🎮📹</span>
+        <span class="cekpc-mode-name">Gaming + Streaming Compatibility</span>
+        <span class="cekpc-mode-desc">Cek buat main game sambil live streaming ke 1 platform.</span>
+      </button>
+      <button class="cekpc-mode-card" data-mode="gaming-multistreaming" type="button">
+        <span class="cekpc-mode-icon">🎮📡</span>
+        <span class="cekpc-mode-name">Gaming + Multiple Streaming</span>
+        <span class="cekpc-mode-desc">Cek buat main game sambil multistream ke beberapa platform sekaligus.</span>
+      </button>
+    </div>
+
+    <div class="cekpc-form hidden" id="cekpc-form">
+      <button id="cekpc-change-mode-btn" class="cekpc-inline-link" type="button">← Ganti jenis cek</button>
       <div class="cekpc-field">
         <label for="cekpc-cpu">Processor (CPU)</label>
         <select id="cekpc-cpu" class="cekpc-select"><option value="">— Pilih CPU —</option></select>
@@ -69,8 +89,8 @@
     <div class="cekpc-results hidden" id="cekpc-results">
       <div class="cekpc-tabs" id="cekpc-tabs">
         <button class="cekpc-tab active" data-tab="gaming" type="button">🎮 Gaming Check</button>
-        <button class="cekpc-tab" data-tab="streaming" type="button">📹 Streaming Check</button>
-        <button class="cekpc-tab" data-tab="bottleneck" type="button">⚖️ Bottleneck Check</button>
+        <button class="cekpc-tab hidden" id="cekpc-tab-streaming-btn" data-tab="streaming" type="button">📹 Streaming Check</button>
+        <button class="cekpc-tab" data-tab="bottleneck" type="button">⚖️ Kenapa Segini?</button>
       </div>
 
       <div class="cekpc-tab-panel" data-panel="gaming">
@@ -83,6 +103,7 @@
       </div>
 
       <div class="cekpc-tab-panel hidden" data-panel="streaming">
+        <p class="cekpc-mode-verdict" id="cekpc-streaming-modeverdict"></p>
         <div class="cekpc-capacity-block">
           <p class="panel-subtitle" style="text-align:center;">Kapasitas Streaming</p>
           <div class="cekpc-capacity-badge" id="cekpc-streaming-badge"></div>
