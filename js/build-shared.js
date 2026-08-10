@@ -54,7 +54,7 @@ function decodeBuildCode(raw){
     Object.entries(payload.s || {}).forEach(([cat,id])=>{
       if(id && byIdShared(id)) single[cat] = id;
     });
-    const multi = { ram:{}, gpu:{}, storage:{} };
+    const multi = { ram:{}, gpu:{}, storage:{}, casefan:{} };
     Object.entries(payload.m || {}).forEach(([cat,obj])=>{
       if(!multi[cat]) multi[cat] = {};
       Object.entries(obj || {}).forEach(([id,qty])=>{
@@ -68,7 +68,8 @@ function decodeBuildCode(raw){
 }
 
 /* ---------- ITEM LOOKUP (versi parametrik, bukan dari state global) ---------- */
-const SINGLE_CATEGORIES = ["cpu","motherboard","psu","casing","monitor","mouse","keyboard","mousepad","os","headphone","networkcard","webcam"];
+const SINGLE_CATEGORIES = ["cpu","motherboard","psu","aircooler","watercooler","casing","monitor","mouse","keyboard","mousepad","os","headphone","networkcard","webcam"];
+const MULTI_CATEGORIES = ["ram","gpu","storage","casefan"];
 
 function getSelectedProductFrom(single, cat){
   const id = single ? single[cat] : null;
@@ -86,7 +87,7 @@ function allItemsFrom(single, multi){
     const p = getSelectedProductFrom(single, cat);
     if(p) items.push({ product:p, qty:1 });
   });
-  ["ram","gpu","storage"].forEach(cat=>{
+  MULTI_CATEGORIES.forEach(cat=>{
     items.push(...getMultiListFrom(multi, cat));
   });
   return items;

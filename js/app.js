@@ -10,7 +10,7 @@ const state = {
   activeCategory: "cpu",
   filters: {},        // { [category]: { [filterKey]: Set(values), inStock:false } }
   single: {},          // { cpu: productId, motherboard: productId, psu: productId, casing: productId, monitor: productId }
-  multi: { ram:{}, gpu:{}, storage:{} }, // { [productId]: qty }
+  multi: { ram:{}, gpu:{}, storage:{}, casefan:{} }, // { [productId]: qty }
 };
 CATEGORY_LIST.forEach(c => { state.filters[c.key] = { inStock:false }; });
 
@@ -35,7 +35,7 @@ function allSelectedItems(){
     const p = getSelectedProduct(cat);
     if(p) items.push({ product:p, qty:1 });
   });
-  ["ram","gpu","storage"].forEach(cat=>{
+  MULTI_CATEGORIES.forEach(cat=>{
     items.push(...getMultiList(cat));
   });
   return items;
@@ -433,7 +433,7 @@ function initResetButton(){
   $("#reset-btn").addEventListener("click", ()=>{
     if(!confirm("Reset semua pilihan komponen?")) return;
     state.single = {};
-    state.multi = { ram:{}, gpu:{}, storage:{} };
+    state.multi = { ram:{}, gpu:{}, storage:{}, casefan:{} };
     renderAll();
   });
 }

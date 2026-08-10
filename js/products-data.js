@@ -346,6 +346,24 @@ const PRODUCTS = [
   { id:"wc-03", category:"webcam", brand:"Logitech", name:"Logitech C920",           spec:"1080p Full HD, autofocus, stereo mic", tier:3, stock:true },
   { id:"wc-04", category:"webcam", brand:"Logitech", name:"Logitech Brio 500",       spec:"1080p 60fps, HDR, auto light correct", tier:4, stock:true },
   { id:"wc-05", category:"webcam", brand:"Elgato",   name:"Elgato Facecam Pro",      spec:"4K60 Ultra HD, Sony sensor",           tier:5, stock:true },
+
+  /* ---------- COOLING: Air Cooler, Water Cooler (AIO), Case Fan ---------- */
+  { id:"hsf-01", category:"aircooler", brand:"Value",        name:"Cooler Tower Standar Bawaan", spec:"Single tower, 1 fan 9cm",        tier:1, stock:true },
+  { id:"hsf-02", category:"aircooler", brand:"Cooler Master", name:"Cooler Master Hyper 212",     spec:"Single tower, PWM fan 12cm",     tier:2, stock:true },
+  { id:"hsf-03", category:"aircooler", brand:"Deepcool",     name:"Deepcool AK400",              spec:"Single tower, ARGB, 4 heatpipe", tier:3, stock:true },
+  { id:"hsf-04", category:"aircooler", brand:"Thermalright", name:"Thermalright Peerless Assassin 120", spec:"Dual tower, dual fan",     tier:4, stock:true },
+  { id:"hsf-05", category:"aircooler", brand:"Noctua",       name:"Noctua NH-D15",               spec:"Dual tower flagship, dual fan",  tier:5, stock:true },
+
+  { id:"aio-01", category:"watercooler", brand:"Value",        name:"AIO Liquid Cooler 120mm",     spec:"Radiator single fan, pompa dasar", tier:2, stock:true },
+  { id:"aio-02", category:"watercooler", brand:"Cooler Master", name:"Cooler Master MasterLiquid 240L", spec:"Radiator 240mm, ARGB",        tier:3, stock:true },
+  { id:"aio-03", category:"watercooler", brand:"NZXT",         name:"NZXT Kraken 280",              spec:"Radiator 280mm, LCD display",     tier:4, stock:true },
+  { id:"aio-04", category:"watercooler", brand:"Corsair",      name:"Corsair iCUE H150i Elite",     spec:"Radiator 360mm, ARGB fans",       tier:5, stock:true },
+
+  { id:"fan-01", category:"casefan", brand:"Value",         name:"Fan Casing 12cm Standard",     spec:"12cm, 1200RPM, tanpa LED",        tier:1, stock:true },
+  { id:"fan-02", category:"casefan", brand:"Gaming",        name:"Fan Casing RGB 12cm",          spec:"12cm, ARGB, 1500RPM",             tier:2, stock:true },
+  { id:"fan-03", category:"casefan", brand:"Cooler Master", name:"Cooler Master SickleFlow 120 ARGB", spec:"12cm, ARGB, PWM",             tier:3, stock:true },
+  { id:"fan-04", category:"casefan", brand:"Lian Li",       name:"Lian Li UNI FAN SL120",        spec:"12cm, ARGB daisy-chain",          tier:4, stock:true },
+  { id:"fan-05", category:"casefan", brand:"Noctua",        name:"Noctua NF-A12x25",             spec:"12cm, static pressure tinggi, senyap", tier:5, stock:true },
 ];
 
 /* Urutan & label kategori yang ditampilkan di builder.html.
@@ -358,6 +376,9 @@ const CATEGORY_LIST = [
   { key:"gpu",         label:"VGA Card (GPU)",      multi:true,  group:"inti" },
   { key:"storage",     label:"Storage",             multi:true,  group:"inti" },
   { key:"psu",         label:"Power Supply (PSU)",  multi:false, group:"inti" },
+  { key:"aircooler",   label:"Air Cooler",          multi:false, group:"inti" },
+  { key:"watercooler", label:"Water Cooler (AIO)",  multi:false, group:"inti" },
+  { key:"casefan",     label:"Case Fan",            multi:true,  group:"inti" },
   { key:"casing",      label:"Casing",              multi:false, group:"inti" },
   { key:"monitor",     label:"Monitor",             multi:false, group:"inti" },
   { key:"mouse",       label:"Mouse",               multi:false, group:"aksesoris" },
@@ -373,6 +394,7 @@ const CATEGORY_LIST = [
 const CATEGORY_ICONS = {
   cpu:"🔲", motherboard:"🧩", ram:"💾", gpu:"🎮", storage:"💽",
   psu:"🔌", casing:"🖥️", monitor:"🖵",
+  aircooler:"🌀", watercooler:"💧", casefan:"🪭",
   mouse:"🖱️", keyboard:"⌨️", mousepad:"⬛", os:"💿",
   headphone:"🎧", networkcard:"📶", webcam:"📷"
 };

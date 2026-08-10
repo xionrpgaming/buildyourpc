@@ -51,8 +51,33 @@
     }
   }
 
+  // ---------- Notifikasi "Website Masih Beta" (cuma di index.html) ----------
+  const BETA_NOTICE_KEY = "xion_beta_notice_seen_v1";
+  function initBetaNotice() {
+    const modal = document.getElementById("betaModal");
+    if (!modal) return;
+    const dismissBtn = document.getElementById("betaModalDismiss");
+
+    let alreadySeen = false;
+    try { alreadySeen = localStorage.getItem(BETA_NOTICE_KEY) === "1"; } catch (e) {}
+    if (alreadySeen) { modal.remove(); return; }
+
+    // sedikit delay biar transisi masuknya kerasa, bukan langsung "nempel"
+    requestAnimationFrame(() => {
+      setTimeout(() => modal.classList.add("show"), 120);
+    });
+
+    dismissBtn.addEventListener("click", () => {
+      modal.classList.add("hide");
+      modal.classList.remove("show");
+      try { localStorage.setItem(BETA_NOTICE_KEY, "1"); } catch (e) {}
+      setTimeout(() => modal.remove(), 400);
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", () => {
     initScrollReveal();
     initParticles();
+    initBetaNotice();
   });
 })();

@@ -14,6 +14,48 @@
    ============================================================ */
 
 let openPickerCat = null; // kategori dropdown yang lagi kebuka, biar bisa auto-close yang lain
+let selectedPlatform = null; // null | "AMD" | "Intel" — dipilih dari toggle di atas
+
+const MOBO_SOCKET_PLATFORM = {
+  AM4:"AMD", AM5:"AMD", sTR5:"AMD",
+  LGA1150:"Intel", LGA1151:"Intel", LGA1200:"Intel", LGA1700:"Intel", LGA1851:"Intel",
+};
+
+/* Daftar produk kategori, sudah disaring platform AMD/Intel untuk
+   CPU & Motherboard kalau platform lagi dipilih. Kategori lain
+   tidak terpengaruh platform. */
+function catProductsFiltered(cat){
+  let list = catProducts(cat);
+  if(selectedPlatform){
+    if(cat === "cpu"){
+      list = list.filter(p => p.brand === selectedPlatform);
+    } else if(cat === "motherboard"){
+      list = list.filter(p => MOBO_SOCKET_PLATFORM[p.socket] === selectedPlatform);
+    }
+  }
+  return list;
+}
+
+function setPlatform(platform){
+  selectedPlatform = platform || null;
+
+  document.querySelectorAll(".platform-btn").forEach(btn=>{
+    btn.classList.toggle("active", (btn.dataset.platform || null) === selectedPlatform);
+  });
+
+  // kalau CPU/motherboard yang sudah dipilih jadi tidak sesuai platform baru, kosongkan
+  if(selectedPlatform){
+    const cpu = getSelectedProduct("cpu");
+    if(cpu && cpu.brand !== selectedPlatform) state.single.cpu = null;
+    const mobo = getSelectedProduct("motherboard");
+    if(mobo && MOBO_SOCKET_PLATFORM[mobo.socket] !== selectedPlatform) state.single.motherboard = null;
+  }
+
+  if(openPickerCat === "cpu" || openPickerCat === "motherboard") closePicker(openPickerCat);
+  refreshPickerRow("cpu");
+  refreshPickerRow("motherboard");
+  renderSummary();
+}
 
 /* Gabungan semua field teks/angka produk (nama, brand, spec, socket,
    tipe RAM, form factor, resolusi, dst) jadi satu string lowercase,
@@ -75,7 +117,7 @@ function pickerRowLabelText(catDef){
 function renderPickerList(cat, searchTerm, animate){
   const catDef = CATEGORY_LIST.find(c=>c.key===cat);
   const term = (searchTerm||"").trim().toLowerCase();
-  let list = catProducts(cat);
+  let list = catProductsFiltered(cat);
   if(term){
     list = list.filter(p => productSearchHaystack(p).includes(term));
   }
@@ -200,6 +242,13 @@ function refreshPickerRow(cat){
   const triggerText = row.querySelector(".picker-trigger-text");
   triggerText.textContent = pickerRowLabelText(catDef);
 
+  const filterHint = row.querySelector(".picker-row-filter-hint");
+  if(filterHint){
+    const show = selectedPlatform && (cat === "cpu" || cat === "motherboard");
+    filterHint.textContent = show ? `disaring: ${selectedPlatform}` : "";
+    filterHint.classList.toggle("hidden", !show);
+  }
+
   const filled = catDef.multi ? getMultiList(cat).length > 0 : !!state.single[cat];
   row.classList.toggle("filled", filled);
 
@@ -230,6 +279,7 @@ function buildPickerRowHtml(catDef){
       <div class="picker-row-head">
         <span class="picker-row-icon" aria-hidden="true">${icon}</span>
         <span class="picker-row-label">${catDef.label}</span>
+        <span class="picker-row-filter-hint hidden"></span>
         <span class="picker-row-check" aria-hidden="true">✓</span>
       </div>
       <div class="picker-combo">
@@ -249,6 +299,10 @@ function buildPickerRowHtml(catDef){
 }
 
 function initPickers(){
+  document.querySelectorAll(".platform-btn").forEach(btn=>{
+    btn.addEventListener("click", ()=> setPlatform(btn.dataset.platform || null));
+  });
+
   const intiWrap = document.getElementById("picker-rows-inti");
   const aksWrap = document.getElementById("picker-rows-aksesoris");
 
@@ -301,6 +355,10 @@ function initPickers(){
 /* Dipanggil ulang setelah kode rakitan dimuat / reset, supaya semua
    baris dropdown (teks trigger, chip, badge) sinkron dengan state baru. */
 function refreshAllPickerRows(){
+  if(!selectedPlatform){
+    const cpu = getSelectedProduct("cpu");
+    if(cpu) setPlatform(cpu.brand);
+  }
   CATEGORY_LIST.forEach(catDef=>{
     refreshPickerRow(catDef.key);
     if(catDef.multi) renderChips(catDef.key);
