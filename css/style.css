@@ -282,6 +282,30 @@ body{ background-color:var(--bg); }
 .xg-toast.show{ opacity:1; transform:translate(-50%,0); }
 .xg-toast.err{ border-color:var(--danger); color:var(--danger); }
 
+/* ---------- PILIH PLATFORM (AMD / Intel) ---------- */
+.platform-select{
+  background:linear-gradient(160deg, var(--panel-alt), var(--panel));
+  border:1px solid var(--border); border-radius:14px;
+  padding:16px 18px; margin-bottom:22px;
+}
+.platform-select-label{ font-weight:700; font-size:13.5px; margin:0 0 10px; }
+.platform-options{ display:flex; flex-wrap:wrap; gap:8px; }
+.platform-btn{
+  display:flex; align-items:center; gap:7px;
+  background:var(--panel); border:1px solid var(--border); border-radius:10px;
+  padding:9px 16px; font-weight:700; font-size:13px; color:var(--muted);
+  transition:border-color .15s ease, color .15s ease, transform .15s ease, background .15s ease;
+}
+.platform-btn:hover{ transform:translateY(-1px); color:var(--text); }
+.platform-btn.active{
+  color:#fff; border-color:transparent;
+  background:linear-gradient(90deg, var(--accent), var(--cyan));
+  box-shadow:0 8px 18px -8px rgba(124,92,255,.6);
+}
+.platform-btn-amd.active{ background:linear-gradient(90deg, #ef5866, #f5834d); box-shadow:0 8px 18px -8px rgba(239,88,102,.6); }
+.platform-btn-intel.active{ background:linear-gradient(90deg, #2f8fef, #22d3ee); box-shadow:0 8px 18px -8px rgba(47,143,239,.6); }
+.platform-select-hint{ font-size:11px; color:var(--muted); margin:10px 0 0; }
+
 /* ---------- BUILDER LAYOUT (v2 — dropdown pencarian) ---------- */
 .builder-shell{
   display:grid;
@@ -291,23 +315,32 @@ body{ background-color:var(--bg); }
 }
 
 #picker-main{
-  padding:26px 32px 60px;
+  padding:22px 28px 50px;
   overflow-y:auto;
 }
-.picker-group{ margin-bottom:30px; }
+.picker-group{ margin-bottom:20px; }
 .picker-group-title{
-  font-family:var(--font-display); font-size:15px; font-weight:700;
+  font-family:var(--font-display); font-size:14px; font-weight:700;
   display:flex; align-items:center; gap:8px;
-  margin:0 0 14px; padding-bottom:10px; border-bottom:1px solid var(--border);
+  margin:0 0 10px; padding-bottom:8px; border-bottom:1px solid var(--border);
 }
 
-.picker-rows{ display:flex; flex-direction:column; gap:10px; }
+.picker-rows{
+  display:grid; grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px 16px; align-items:start;
+}
 .picker-row{ position:relative; }
-.picker-row-head{ display:flex; align-items:center; gap:8px; margin-bottom:6px; }
-.picker-row-icon{ font-size:15px; }
-.picker-row-label{ font-size:13.5px; font-weight:700; color:var(--text); }
+.picker-row-head{ display:flex; align-items:center; gap:6px; margin-bottom:4px; }
+.picker-row-icon{ font-size:14px; }
+.picker-row-label{ font-size:12.5px; font-weight:700; color:var(--text); }
+.picker-row-filter-hint{
+  font-family:var(--font-mono); font-size:9.5px; letter-spacing:.03em;
+  color:var(--accent); background:var(--accent-soft); border-radius:999px;
+  padding:1px 7px; white-space:nowrap;
+}
 .picker-row-check{
-  color:var(--ok); font-size:13px; opacity:0; transform:scale(.4);
+  color:var(--ok); font-size:12px; opacity:0; transform:scale(.4);
+  margin-left:auto;
   transition:opacity .25s cubic-bezier(.34,1.56,.64,1), transform .25s cubic-bezier(.34,1.56,.64,1);
 }
 .picker-row.filled .picker-row-check{ opacity:1; transform:scale(1); }
@@ -315,8 +348,8 @@ body{ background-color:var(--bg); }
 .picker-combo{ position:relative; }
 .picker-trigger{
   width:100%; display:flex; align-items:center; gap:8px;
-  background:var(--panel-alt); border:1px solid var(--border); border-radius:12px;
-  padding:12px 14px; text-align:left; color:var(--text);
+  background:var(--panel-alt); border:1px solid var(--border); border-radius:11px;
+  padding:10px 12px; text-align:left; color:var(--text);
   transition:border-color .15s ease, box-shadow .15s ease, background .15s ease;
 }
 .picker-trigger:hover{ border-color:rgba(124,92,255,.5); }
@@ -714,6 +747,9 @@ body{ background-color:var(--bg); }
 @media (max-width:760px){
   .builder-shell{ grid-template-columns:1fr; }
   #picker-main{ padding:18px 16px 40px; }
+  .picker-rows{ grid-template-columns:1fr; }
+  .platform-options{ flex-direction:column; }
+  .platform-btn{ justify-content:center; }
   #summary-panel{
     grid-column:1 / -1; border-left:none; border-top:1px solid var(--border);
     flex-direction:column; flex-wrap:nowrap; overflow-x:hidden;
@@ -1081,4 +1117,74 @@ body{ background-color:var(--bg); }
   .hub-grid{ grid-template-columns:1fr; padding:0 20px 40px; gap:16px; }
   .hub-card{ min-height:220px; }
   .hub-card-testi{ padding:16px 18px; }
+}
+
+/* ============================================================
+   BETA NOTICE MODAL (index.html)
+   ------------------------------------------------------------
+   Muncul sebelum pengunjung baru bisa "masuk" ke landing page,
+   ngasih tau situs masih tahap beta. Tersimpan di localStorage
+   supaya tidak muncul berulang tiap kunjungan di browser yang
+   sama.
+   ============================================================ */
+.beta-modal{
+  position:fixed; inset:0; z-index:500;
+  display:flex; align-items:center; justify-content:center;
+  padding:20px;
+  background:rgba(6,7,10,0);
+  backdrop-filter:blur(0px);
+  -webkit-backdrop-filter:blur(0px);
+  opacity:0; visibility:hidden; pointer-events:none;
+  transition:opacity .35s ease, background .35s ease, backdrop-filter .35s ease, visibility 0s linear .35s;
+}
+.beta-modal.show{
+  opacity:1; visibility:visible; pointer-events:auto;
+  background:rgba(6,7,10,.72);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  transition:opacity .35s ease, background .35s ease, backdrop-filter .35s ease, visibility 0s;
+}
+.beta-modal.hide{ opacity:0; background:rgba(6,7,10,0); backdrop-filter:blur(0px); -webkit-backdrop-filter:blur(0px); }
+
+.beta-modal-card{
+  position:relative;
+  max-width:440px; width:100%;
+  background:linear-gradient(165deg, var(--panel-alt), var(--panel));
+  border:1px solid rgba(245,185,77,.4);
+  border-radius:20px;
+  padding:32px 28px 28px;
+  text-align:center;
+  box-shadow:0 30px 70px -20px rgba(0,0,0,.7), 0 0 0 1px rgba(245,185,77,.08);
+  transform:translateY(18px) scale(.94);
+  opacity:0;
+  transition:transform .4s cubic-bezier(.16,1,.3,1), opacity .4s ease;
+}
+.beta-modal.show .beta-modal-card{ transform:translateY(0) scale(1); opacity:1; }
+
+.beta-modal-badge{
+  display:inline-flex; align-items:center; gap:6px;
+  font-family:var(--font-mono); font-size:12px; font-weight:700; letter-spacing:.08em;
+  color:var(--warn); background:rgba(245,185,77,.14); border:1px solid rgba(245,185,77,.4);
+  border-radius:999px; padding:7px 16px; margin-bottom:16px;
+  animation:betaBadgePulse 2.2s ease-in-out infinite;
+}
+@keyframes betaBadgePulse{
+  0%,100%{ box-shadow:0 0 0 0 rgba(245,185,77,.35); }
+  50%{ box-shadow:0 0 0 8px rgba(245,185,77,0); }
+}
+
+.beta-modal-card h2{
+  font-family:var(--font-display); font-size:20px; line-height:1.3;
+  margin:0 0 12px; color:var(--text);
+}
+.beta-modal-card p{
+  font-size:14px; line-height:1.65; color:var(--muted);
+  margin:0 0 24px;
+}
+.beta-modal-card .btn-primary{
+  width:100%; text-align:center; border:none;
+}
+
+@media (prefers-reduced-motion:reduce){
+  .beta-modal, .beta-modal-card, .beta-modal-badge{ transition:none; animation:none; }
 }
