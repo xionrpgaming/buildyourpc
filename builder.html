@@ -41,6 +41,16 @@
 
 <div class="builder-shell">
   <main id="picker-main">
+    <div class="platform-select">
+      <p class="platform-select-label">Mau rakit platform apa?</p>
+      <div class="platform-options">
+        <button type="button" class="platform-btn platform-btn-amd" data-platform="AMD"><span>🔴</span> AMD</button>
+        <button type="button" class="platform-btn platform-btn-intel" data-platform="Intel"><span>🔵</span> Intel</button>
+        <button type="button" class="platform-btn" data-platform="">Semua / Belum Tentu</button>
+      </div>
+      <p class="platform-select-hint">Pilih salah satu supaya pilihan CPU &amp; Motherboard otomatis disaring sesuai platform.</p>
+    </div>
+
     <div class="picker-group" data-group="inti">
       <h2 class="picker-group-title"><span>🧠</span> Komponen Inti</h2>
       <div class="picker-rows" id="picker-rows-inti"></div>
