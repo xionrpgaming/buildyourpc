@@ -13,7 +13,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body class="page-landing">
 
 <header class="site-header">
   <a href="index.html" class="logo">
@@ -77,7 +77,7 @@
 
   <div class="landing-content">
 
-<section class="hero">
+<section class="hero hub-hero">
   <div class="circuit-decor" aria-hidden="true">
     <svg viewBox="0 0 800 400" preserveAspectRatio="none">
       <path d="M0,80 L200,80 L240,120 L500,120 L540,80 L800,80"/>
@@ -117,131 +117,75 @@
 
   <p class="hero-eyebrow">Rakit PC · Cek Kompatibilitas · Konsultasi Gratis</p>
   <h1>Rakit PC impianmu, <span>tanpa salah komponen.</span></h1>
-  <p>Pilih CPU, motherboard, RAM, VGA, storage, PSU, casing, sampai monitor — sistem kami otomatis mengecek <span class="kw kw-cyan">kecocokan komponen</span> dan memberi <span class="kw kw-violet">Build Score</span> rakitanmu. Bisa pilih lebih dari satu RAM/VGA/storage sekaligus. Harga & ketersediaan dikonfirmasi langsung oleh admin lewat <span class="kw kw-ok">WhatsApp</span>.</p>
+  <p>Pilih CPU, motherboard, RAM, VGA, storage, sampai aksesoris — sistem kami otomatis mengecek <span class="kw kw-cyan">kecocokan komponen</span> dan memberi <span class="kw kw-violet">Build Score</span> rakitanmu. Harga & ketersediaan dikonfirmasi langsung oleh admin lewat <span class="kw kw-ok">WhatsApp</span>.</p>
   <div class="hero-actions">
     <a href="builder.html" class="btn-primary">Mulai Rakit PC →</a>
     <a href="#kategori" class="btn-ghost">Lihat Kategori</a>
   </div>
 </section>
 
-<p class="section-label">Kenapa Rakit Lewat Sini</p>
-<div class="feature-grid">
-  <div class="feature-card reveal">
-    <span class="icon">🧩</span>
-    <h3>Filter Detail per Kategori</h3>
-    <p>Filter socket, tipe RAM, form factor, TDP, dan lainnya — seperti memilih part di toko komponen profesional.</p>
-  </div>
-  <div class="feature-card reveal">
-    <span class="icon">✅</span>
-    <h3>Cek Kompatibilitas Otomatis</h3>
-    <p>Sistem menandai kecocokan CPU-motherboard, tipe RAM, ukuran casing, sampai kebutuhan daya PSU secara real-time.</p>
-  </div>
-  <div class="feature-card reveal">
-    <span class="icon">🧠</span>
-    <h3>Multi-Component</h3>
-    <p>Tambahkan lebih dari satu RAM, storage, atau VGA sekaligus sesuai kebutuhan rakitanmu.</p>
-  </div>
-  <div class="feature-card reveal">
-    <span class="icon">📊</span>
-    <h3>Build Score</h3>
-    <p>Estimasi skor kekuatan rakitan (Entry hingga Enthusiast) berdasarkan tingkatan komponen & keseimbangan CPU/GPU.</p>
-  </div>
+<div class="hub-cats" id="kategori">
+  <a class="hub-cat-chip reveal" href="builder.html"><span>🔲</span>CPU</a>
+  <a class="hub-cat-chip reveal" href="builder.html"><span>🧩</span>Motherboard</a>
+  <a class="hub-cat-chip reveal" href="builder.html"><span>💾</span>RAM</a>
+  <a class="hub-cat-chip reveal" href="builder.html"><span>🎮</span>VGA</a>
+  <a class="hub-cat-chip reveal" href="builder.html"><span>💽</span>Storage</a>
+  <a class="hub-cat-chip reveal" href="builder.html"><span>🔌</span>PSU</a>
+  <a class="hub-cat-chip reveal" href="builder.html"><span>🖥️</span>Casing</a>
+  <a class="hub-cat-chip reveal" href="builder.html"><span>🖵</span>Monitor</a>
+  <a class="hub-cat-chip reveal hub-cat-chip--accent" href="builder.html"><span>🎁</span>+ Aksesoris</a>
 </div>
 
-<p class="section-label" id="kategori">Kategori Komponen</p>
-<div class="category-strip">
-  <a class="category-pill reveal" href="builder.html"><span class="cat-icon">🔲</span>Processor (CPU)</a>
-  <a class="category-pill reveal" href="builder.html"><span class="cat-icon">🧩</span>Motherboard</a>
-  <a class="category-pill reveal" href="builder.html"><span class="cat-icon">💾</span>RAM</a>
-  <a class="category-pill reveal" href="builder.html"><span class="cat-icon">🎮</span>VGA Card</a>
-  <a class="category-pill reveal" href="builder.html"><span class="cat-icon">💽</span>Storage</a>
-  <a class="category-pill reveal" href="builder.html"><span class="cat-icon">🔌</span>Power Supply</a>
-  <a class="category-pill reveal" href="builder.html"><span class="cat-icon">🖥️</span>Casing</a>
-  <a class="category-pill reveal" href="builder.html"><span class="cat-icon">🖵</span>Monitor</a>
-</div>
+<div class="hub-grid">
 
-<p class="section-label" id="testimoni">Testimoni Pelanggan</p>
-
-<div class="testimoni-marquee">
-  <div class="testimoni-track" id="testimoniTrack">
-    <!-- kartu asli, di-generate ulang JS jadi 2x lipat (duplikat) untuk loop mulus -->
-    <div class="testi-card"><span class="testi-quote-mark">"</span><p class="testi-text">Proses rakitnya enak banget, tiap komponen langsung kelihatan cocok atau enggak sama motherboard-nya. Nggak was-was salah beli lagi.</p><div class="testi-foot"><span class="testi-avatar">D</span><span class="testi-name">Dwi</span></div></div>
-    <div class="testi-card"><span class="testi-quote-mark">"</span><p class="testi-text">Admin fast response pas saya tanya-tanya harga via WhatsApp. Rekomendasinya juga sesuai budget yang saya kasih.</p><div class="testi-foot"><span class="testi-avatar">A</span><span class="testi-name">Ari</span></div></div>
-    <div class="testi-card"><span class="testi-quote-mark">"</span><p class="testi-text">Build Score-nya membantu banget buat yang awam kayak saya, jadi tahu rakitan saya udah seimbang atau belum sebelum checkout.</p><div class="testi-foot"><span class="testi-avatar">W</span><span class="testi-name">Wicaksono</span></div></div>
-    <div class="testi-card"><span class="testi-quote-mark">"</span><p class="testi-text">Suka fitur simpan kodenya, jadi bisa lanjut mikir rakitan kapan aja tanpa mulai dari nol lagi.</p><div class="testi-foot"><span class="testi-avatar">A</span><span class="testi-name">Achmad</span></div></div>
-    <div class="testi-card"><span class="testi-quote-mark">"</span><p class="testi-text">Pertama kali rakit PC sendiri dan nggak bingung sama sekali, filter socket & tipe RAM-nya jelas.</p><div class="testi-foot"><span class="testi-avatar">N</span><span class="testi-name">Novel</span></div></div>
-    <div class="testi-card"><span class="testi-quote-mark">"</span><p class="testi-text">Rekomendasi PSU-nya pas, nggak dipaksa beli watt gede padahal kebutuhan saya nggak sampai segitu.</p><div class="testi-foot"><span class="testi-avatar">Y</span><span class="testi-name">Yono</span></div></div>
-    <div class="testi-card"><span class="testi-quote-mark">"</span><p class="testi-text">Suka karena harga & stok dikonfirmasi langsung sama admin, jadi nggak takut harga di web beda sama kenyataan.</p><div class="testi-foot"><span class="testi-avatar">M</span><span class="testi-name">Mega</span></div></div>
-    <div class="testi-card"><span class="testi-quote-mark">"</span><p class="testi-text">Preset Mid End PC-nya pas banget buat kerjaan desain saya, tinggal klik terus lanjut tanya-tanya ke admin.</p><div class="testi-foot"><span class="testi-avatar">A</span><span class="testi-name">Aisyah</span></div></div>
-    <div class="testi-card"><span class="testi-quote-mark">"</span><p class="testi-text">Tampilan webnya enak dilihat, gampang dipakai walau dari HP sekalipun.</p><div class="testi-foot"><span class="testi-avatar">S</span><span class="testi-name">Shafiyah</span></div></div>
-    <div class="testi-card"><span class="testi-quote-mark">"</span><p class="testi-text">Cek kompatibilitas motherboard sama casing-nya nolong banget, dulu saya pernah salah beli di tempat lain.</p><div class="testi-foot"><span class="testi-avatar">V</span><span class="testi-name">Vega</span></div></div>
-    <div class="testi-card"><span class="testi-quote-mark">"</span><p class="testi-text">Respon di Discord juga ramah, banyak yang bantu diskusi rakitan selain dari admin resminya.</p><div class="testi-foot"><span class="testi-avatar">A</span><span class="testi-name">Arief</span></div></div>
-    <div class="testi-card"><span class="testi-quote-mark">"</span><p class="testi-text">Bisa pilih RAM & storage lebih dari satu sekaligus, jadi pas buat kebutuhan editing saya yang banyak file.</p><div class="testi-foot"><span class="testi-avatar">R</span><span class="testi-name">Rifki</span></div></div>
-    <div class="testi-card"><span class="testi-quote-mark">"</span><p class="testi-text">Nggak ribet, tinggal share link hasil rakitan ke admin terus lanjut nego harga.</p><div class="testi-foot"><span class="testi-avatar">S</span><span class="testi-name">Sabina</span></div></div>
-    <div class="testi-card"><span class="testi-quote-mark">"</span><p class="testi-text">Baru migrasi dari laptop ke PC, bantuan pemilihan komponennya sangat membantu buat pemula kayak saya.</p><div class="testi-foot"><span class="testi-avatar">S</span><span class="testi-name">Salsa</span></div></div>
-    <div class="testi-card"><span class="testi-quote-mark">"</span><p class="testi-text">Suka approach-nya yang jujur, ada yang direkomendasiin turun spek karena emang lebih worth it buat kebutuhan saya.</p><div class="testi-foot"><span class="testi-avatar">B</span><span class="testi-name">Balgis</span></div></div>
-    <div class="testi-card"><span class="testi-quote-mark">"</span><p class="testi-text">Proses tanya sampai deal cepat, komunikasinya enak lewat WhatsApp terus.</p><div class="testi-foot"><span class="testi-avatar">L</span><span class="testi-name">Latifa</span></div></div>
-    <div class="testi-card"><span class="testi-quote-mark">"</span><p class="testi-text">Fitur preset High End PC-nya jadi acuan awal saya sebelum custom sendiri sesuai kebutuhan.</p><div class="testi-foot"><span class="testi-avatar">G</span><span class="testi-name">Gifhari</span></div></div>
-    <div class="testi-card"><span class="testi-quote-mark">"</span><p class="testi-text">Overall puas, bakal balik lagi kalau mau upgrade komponen lain.</p><div class="testi-foot"><span class="testi-avatar">D</span><span class="testi-name">Djati</span></div></div>
-  </div>
-</div>
-
-<p class="section-label" id="bisnis">Untuk Bisnis (B2B)</p>
-<div class="bisnis-card reveal">
-  <div class="bisnis-media" aria-hidden="true">
-    <svg viewBox="0 0 360 300" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="180" cy="150" r="128" fill="url(#bisnisGlow)"/>
-      <defs>
-        <radialGradient id="bisnisGlow" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#7c5cff" stop-opacity=".22"/>
-          <stop offset="100%" stop-color="#7c5cff" stop-opacity="0"/>
-        </radialGradient>
-      </defs>
-
-      <!-- sisi kiri: toko/bisnis kami -->
-      <g>
-        <rect x="34" y="120" width="92" height="100" rx="10" fill="#171b24" stroke="#7c5cff" stroke-width="1.6"/>
-        <path d="M28 122 L80 82 L132 122" fill="none" stroke="#7c5cff" stroke-width="1.6" stroke-linejoin="round"/>
-        <rect x="58" y="150" width="20" height="20" rx="3" fill="#0b0d12" stroke="#22d3ee" stroke-width="1.2"/>
-        <rect x="84" y="150" width="20" height="20" rx="3" fill="#0b0d12" stroke="#22d3ee" stroke-width="1.2"/>
-        <rect x="70" y="184" width="20" height="36" rx="3" fill="#0b0d12" stroke="#7c5cff" stroke-width="1.2"/>
-      </g>
-
-      <!-- sisi kanan: perusahaan/instansi mitra -->
-      <g>
-        <rect x="234" y="96" width="92" height="124" rx="10" fill="#171b24" stroke="#22d3ee" stroke-width="1.6"/>
-        <g stroke="#22d3ee" stroke-width="1.2">
-          <rect x="248" y="112" width="14" height="14" rx="2" fill="#0b0d12"/>
-          <rect x="270" y="112" width="14" height="14" rx="2" fill="#0b0d12"/>
-          <rect x="292" y="112" width="14" height="14" rx="2" fill="#0b0d12"/>
-          <rect x="248" y="136" width="14" height="14" rx="2" fill="#0b0d12"/>
-          <rect x="270" y="136" width="14" height="14" rx="2" fill="#0b0d12"/>
-          <rect x="292" y="136" width="14" height="14" rx="2" fill="#0b0d12"/>
-          <rect x="248" y="160" width="14" height="14" rx="2" fill="#0b0d12"/>
-          <rect x="270" y="160" width="14" height="14" rx="2" fill="#0b0d12"/>
-          <rect x="292" y="160" width="14" height="14" rx="2" fill="#0b0d12"/>
-        </g>
-        <rect x="270" y="188" width="20" height="32" rx="2" fill="#0b0d12" stroke="#22d3ee" stroke-width="1.2"/>
-      </g>
-
-      <!-- garis penghubung + simbol handshake di tengah -->
-      <path d="M126 190 C165 190 165 190 175 190" fill="none" stroke="#7c5cff" stroke-width="1.6" stroke-dasharray="4 6"/>
-      <path d="M234 190 C195 190 195 190 185 190" fill="none" stroke="#22d3ee" stroke-width="1.6" stroke-dasharray="4 6"/>
-      <circle cx="180" cy="190" r="22" fill="#0b0d12" stroke="#e7e9ee" stroke-width="1.4"/>
-      <path d="M170 190 l6 6 14-14" fill="none" stroke="#35d08f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
+  <div class="hub-card">
+    <p class="hub-card-title">Kenapa Rakit Di Sini</p>
+    <ul class="hub-feature-list">
+      <li><span>✅</span> Cek kompatibilitas otomatis</li>
+      <li><span>🧠</span> Multi-component (RAM/VGA/Storage)</li>
+      <li><span>📊</span> Build Score real-time</li>
+      <li><span>💬</span> Konsultasi gratis via WhatsApp</li>
+    </ul>
+    <a class="sidebar-discord hub-discord" href="https://discord.gg/pephd7KNMb" target="_blank" rel="noopener">
+      <span class="sidebar-discord-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 12c0 .6.45 1 1 1s1-.4 1-1-.45-1-1-1-1 .4-1 1Z" fill="currentColor"/>
+          <path d="M14 12c0 .6.45 1 1 1s1-.4 1-1-.45-1-1-1-1 .4-1 1Z" fill="currentColor"/>
+          <path d="M7 6.2C9.9 5 14.1 5 17 6.2c1.8 3 2 6.4 1.7 9.6-1.4 1-2.8 1.7-4.2 2.1l-.7-1.5c.7-.25 1.35-.55 1.95-.95-.16-.12-.32-.24-.47-.37-3.5 1.6-7.35 1.6-10.9 0-.15.13-.31.25-.47.37.6.4 1.25.7 1.95.95l-.7 1.5c-1.4-.4-2.8-1.1-4.2-2.1C5 12.6 5.2 9.2 7 6.2Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <span>Gabung Discord Kami</span>
+    </a>
   </div>
 
-  <div class="bisnis-copy">
-    <p class="bisnis-eyebrow">B2B / Partnership</p>
-    <h3>Interested in Partnering With Us?</h3>
-    <p class="bisnis-lead">Get in touch with us to discuss your partnership needs and find the perfect solution for your business.</p>
-    <p class="bisnis-detail">XionRPGaming melayani pengadaan (procurement) unit PC &amp; sparepart dalam jumlah besar untuk perusahaan, kantor, warnet, studio, dan institusi lain — lengkap dengan konsultasi spesifikasi, harga khusus volume, dan dukungan purna jual.</p>
-    <a class="btn-wa bisnis-wa-btn" href="https://wa.me/6285814565849?text=Halo%2C%20saya%20mau%20tanya%20soal%20pengadaan%20PC%2Fsparepart%20untuk%20kebutuhan%20bisnis%2Fkorporasi." target="_blank" rel="noopener">Contact Us</a>
+  <div class="hub-card hub-card-testi" id="testimoni">
+    <p class="hub-card-title">💬 Testimoni Pelanggan</p>
+    <div class="testimoni-marquee hub-marquee">
+      <div class="testimoni-track" id="testimoniTrack">
+        <div class="testi-card"><span class="testi-quote-mark">"</span><p class="testi-text">Proses rakitnya enak banget, tiap komponen langsung kelihatan cocok atau enggak sama motherboard-nya.</p><div class="testi-foot"><span class="testi-avatar">D</span><span class="testi-name">Dwi</span></div></div>
+        <div class="testi-card"><span class="testi-quote-mark">"</span><p class="testi-text">Admin fast response pas saya tanya-tanya harga via WhatsApp. Rekomendasinya juga sesuai budget saya.</p><div class="testi-foot"><span class="testi-avatar">A</span><span class="testi-name">Ari</span></div></div>
+        <div class="testi-card"><span class="testi-quote-mark">"</span><p class="testi-text">Build Score-nya membantu banget buat yang awam kayak saya, jadi tahu rakitan udah seimbang atau belum.</p><div class="testi-foot"><span class="testi-avatar">W</span><span class="testi-name">Wicaksono</span></div></div>
+        <div class="testi-card"><span class="testi-quote-mark">"</span><p class="testi-text">Suka fitur simpan kodenya, jadi bisa lanjut mikir rakitan kapan aja tanpa mulai dari nol lagi.</p><div class="testi-foot"><span class="testi-avatar">A</span><span class="testi-name">Achmad</span></div></div>
+        <div class="testi-card"><span class="testi-quote-mark">"</span><p class="testi-text">Pertama kali rakit PC sendiri dan nggak bingung sama sekali, pilihan komponennya jelas.</p><div class="testi-foot"><span class="testi-avatar">N</span><span class="testi-name">Novel</span></div></div>
+        <div class="testi-card"><span class="testi-quote-mark">"</span><p class="testi-text">Rekomendasi PSU-nya pas, nggak dipaksa beli watt gede padahal kebutuhan saya nggak sampai segitu.</p><div class="testi-foot"><span class="testi-avatar">Y</span><span class="testi-name">Yono</span></div></div>
+        <div class="testi-card"><span class="testi-quote-mark">"</span><p class="testi-text">Suka karena harga & stok dikonfirmasi langsung sama admin, jadi nggak takut harga beda sama kenyataan.</p><div class="testi-foot"><span class="testi-avatar">M</span><span class="testi-name">Mega</span></div></div>
+        <div class="testi-card"><span class="testi-quote-mark">"</span><p class="testi-text">Tampilan webnya enak dilihat, gampang dipakai walau dari HP sekalipun.</p><div class="testi-foot"><span class="testi-avatar">S</span><span class="testi-name">Shafiyah</span></div></div>
+        <div class="testi-card"><span class="testi-quote-mark">"</span><p class="testi-text">Cek kompatibilitas motherboard sama casing-nya nolong banget, dulu saya pernah salah beli di tempat lain.</p><div class="testi-foot"><span class="testi-avatar">V</span><span class="testi-name">Vega</span></div></div>
+        <div class="testi-card"><span class="testi-quote-mark">"</span><p class="testi-text">Bisa pilih RAM & storage lebih dari satu sekaligus, jadi pas buat kebutuhan editing saya yang banyak file.</p><div class="testi-foot"><span class="testi-avatar">R</span><span class="testi-name">Rifki</span></div></div>
+      </div>
+    </div>
   </div>
+
+  <div class="hub-card hub-card-bisnis" id="bisnis">
+    <p class="hub-card-title">🏢 Untuk Bisnis (B2B)</p>
+    <p class="hub-bisnis-lead">Interested in Partnering With Us?</p>
+    <p class="hub-bisnis-text">Get in touch to discuss your partnership needs — pengadaan PC &amp; sparepart untuk perusahaan, kantor, warnet, studio, dan institusi lain.</p>
+    <a class="btn-wa hub-bisnis-btn" href="https://wa.me/6285814565849?text=Halo%2C%20saya%20mau%20tanya%20soal%20pengadaan%20PC%2Fsparepart%20untuk%20kebutuhan%20bisnis%2Fkorporasi." target="_blank" rel="noopener">Contact Us</a>
+  </div>
+
 </div>
 
-</div><!-- /.landing-content -->
+  </div><!-- /.landing-content -->
 </div><!-- /.landing-shell -->
 
 <script src="js/testimoni-marquee.js"></script>

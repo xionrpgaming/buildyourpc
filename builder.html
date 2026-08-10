@@ -40,23 +40,15 @@
 </header>
 
 <div class="builder-shell">
-  <div class="nav-column">
-    <div class="code-entry-box">
-      <label for="load-code-input-top" class="code-entry-label">🔑 Punya kode rakitan?</label>
-      <input type="text" id="load-code-input-top" class="text-input" placeholder="Tempel kode di sini">
-      <button id="load-code-btn-top" class="btn-secondary" type="button">Muat Rakitan</button>
+  <main id="picker-main">
+    <div class="picker-group" data-group="inti">
+      <h2 class="picker-group-title"><span>🧠</span> Komponen Inti</h2>
+      <div class="picker-rows" id="picker-rows-inti"></div>
     </div>
-    <nav id="category-nav"></nav>
-  </div>
-
-  <aside id="filter-panel"></aside>
-
-  <main id="product-grid-wrap">
-    <div class="grid-heading">
-      <h2 id="grid-title">Processor (CPU)</h2>
-      <span id="grid-count"></span>
+    <div class="picker-group" data-group="aksesoris">
+      <h2 class="picker-group-title"><span>🎁</span> Aksesoris Tambahan</h2>
+      <div class="picker-rows" id="picker-rows-aksesoris"></div>
     </div>
-    <div id="product-grid"></div>
   </main>
 
   <aside id="summary-panel">
@@ -94,7 +86,7 @@
           <button id="copy-code-btn" class="btn-copy" type="button">Salin</button>
         </div>
         <a id="save-result-link" class="btn-secondary btn-result-link" href="#" target="_blank" rel="noopener">🔗 Buka Halaman Hasil</a>
-        <p class="code-hint" id="save-result-hint">Kode ini juga sudah dikirim ke email kamu. Masukkan lagi kapan saja di kolom "Muat Rakitan" (kiri atas) untuk melanjutkan — dari perangkat manapun.</p>
+        <p class="code-hint" id="save-result-hint">Kode ini juga sudah dikirim ke email kamu. Masukkan lagi kapan saja di kolom "Muat Rakitan" di panel ini untuk melanjutkan — dari perangkat manapun.</p>
       </div>
       <div id="saved-builds-list" class="saved-builds-list"></div>
     </div>
@@ -114,6 +106,7 @@
 <script src="js/visualizer3d.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script src="js/app.js"></script>
+<script src="js/picker.js"></script>
 <script src="js/animations.js"></script>
 </body>
 </html>
