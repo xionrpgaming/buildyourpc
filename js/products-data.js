@@ -304,16 +304,75 @@ const PRODUCTS = [
   { id:"mon-10", category:"monitor", brand:"Gaming",  name:'Monitor 27" QHD 240Hz',    spec:"2560x1440, 240Hz, IPS", size:27, resolution:"QHD", refreshRate:240, minGpuTier:5, tier:5, stock:true },
   { id:"mon-11", category:"monitor", brand:"Enthusiast", name:'Monitor 27" QHD OLED 240Hz', spec:"2560x1440, 240Hz, OLED", size:27, resolution:"QHD", refreshRate:240, minGpuTier:5, tier:5, stock:true },
   { id:"mon-12", category:"monitor", brand:"Gaming",  name:'Monitor 32" QHD 165Hz Curved', spec:"2560x1440, 165Hz, VA Curved", size:32, resolution:"QHD", refreshRate:165, minGpuTier:4, tier:4, stock:true },
+
+  /* ---------- AKSESORIS TAMBAHAN (ditambahkan Agustus 2026) ---------- */
+  { id:"mouse-01", category:"mouse", brand:"Value",     name:"Mouse Wired Basic",            spec:"Optical, 1000 DPI, USB",                 tier:1, stock:true },
+  { id:"mouse-02", category:"mouse", brand:"Gaming",    name:"Mouse Gaming Wired RGB",        spec:"Optical, 6400 DPI, 6 tombol, RGB",       tier:2, stock:true },
+  { id:"mouse-03", category:"mouse", brand:"Logitech",  name:"Logitech G102 Lightsync",       spec:"Optical, 8000 DPI, RGB",                 tier:3, stock:true },
+  { id:"mouse-04", category:"mouse", brand:"Razer",     name:"Razer DeathAdder V3",           spec:"Wired, 30000 DPI, Ergonomis",            tier:4, stock:true },
+  { id:"mouse-05", category:"mouse", brand:"Logitech",  name:"Logitech G Pro X Superlight",   spec:"Wireless, 25600 DPI, 63g",               tier:5, stock:true },
+
+  { id:"kb-01", category:"keyboard", brand:"Value",     name:"Keyboard Membrane Standard",     spec:"USB, Full-size",                        tier:1, stock:true },
+  { id:"kb-02", category:"keyboard", brand:"Gaming",    name:"Keyboard Gaming Membrane RGB",   spec:"USB, Anti-ghosting, RGB",                tier:2, stock:true },
+  { id:"kb-03", category:"keyboard", brand:"Royal Kludge", name:"RK Royal Kludge RK61",       spec:"Mechanical, Red Switch, 60%",            tier:3, stock:true },
+  { id:"kb-04", category:"keyboard", brand:"Logitech",  name:"Logitech G Pro X",              spec:"Mechanical, Hot-swap, TKL",              tier:4, stock:true },
+  { id:"kb-05", category:"keyboard", brand:"Razer",     name:"Razer Huntsman V3 Pro",         spec:"Optical Switch, Analog, Full-size",      tier:5, stock:true },
+
+  { id:"mp-01", category:"mousepad", brand:"Value",     name:"Mousepad Standard 25x20cm",      spec:"Cloth, non-slip base",                  tier:1, stock:true },
+  { id:"mp-02", category:"mousepad", brand:"Gaming",    name:"Mousepad Gaming Medium 35x25cm", spec:"Cloth, stitched edge",                  tier:2, stock:true },
+  { id:"mp-03", category:"mousepad", brand:"Gaming",    name:"Mousepad Gaming Extended 80x30cm", spec:"Cloth, ukuran full desk",             tier:3, stock:true },
+  { id:"mp-04", category:"mousepad", brand:"SteelSeries", name:"SteelSeries QcK Heavy",        spec:"Cloth tebal 6mm, extra grip",           tier:4, stock:true },
+  { id:"mp-05", category:"mousepad", brand:"Logitech",  name:"Logitech G840 XL",               spec:"Cloth, extra large",                    tier:4, stock:true },
+
+  { id:"os-01", category:"os", brand:"Community", name:"Linux Ubuntu (Gratis)",          spec:"Open-source, gratis, cocok umum & dev", tier:1, stock:true },
+  { id:"os-02", category:"os", brand:"Microsoft", name:"Windows 10 Home OEM",            spec:"64-bit, lisensi digital",               tier:2, stock:true },
+  { id:"os-03", category:"os", brand:"Microsoft", name:"Windows 11 Home OEM",            spec:"64-bit, lisensi digital",               tier:3, stock:true },
+  { id:"os-04", category:"os", brand:"Microsoft", name:"Windows 11 Pro OEM",             spec:"64-bit, lisensi digital, fitur Pro",    tier:4, stock:true },
+
+  { id:"hp-01", category:"headphone", brand:"Value",       name:"Headset Wired Basic",         spec:"3.5mm jack, stereo, mic",             tier:1, stock:true },
+  { id:"hp-02", category:"headphone", brand:"Gaming",      name:"Headset Gaming 7.1 USB",      spec:"USB, Surround 7.1, RGB",              tier:2, stock:true },
+  { id:"hp-03", category:"headphone", brand:"HyperX",      name:"HyperX Cloud Stinger 2",      spec:"3.5mm, memory foam, ringan",          tier:3, stock:true },
+  { id:"hp-04", category:"headphone", brand:"SteelSeries", name:"SteelSeries Arctis Nova 7",   spec:"Wireless 2.4GHz + BT, Hi-Res",        tier:4, stock:true },
+  { id:"hp-05", category:"headphone", brand:"Sennheiser",  name:"Sennheiser HD 560S",          spec:"Open-back, audiophile grade",         tier:5, stock:true },
+
+  { id:"nc-01", category:"networkcard", brand:"TP-Link", name:"TP-Link TG-3468 Gigabit LAN",  spec:"PCIe, 1 Gbps, kabel",                  tier:1, stock:true },
+  { id:"nc-02", category:"networkcard", brand:"TP-Link", name:"TP-Link Archer T2E WiFi",      spec:"PCIe, WiFi AC600 + Bluetooth",         tier:2, stock:true },
+  { id:"nc-03", category:"networkcard", brand:"Asus",    name:"Asus PCE-AX58BT WiFi 6",       spec:"PCIe, WiFi 6 AX3000 + BT5.0",          tier:3, stock:true },
+  { id:"nc-04", category:"networkcard", brand:"Intel",   name:"Intel AX210 WiFi 6E",          spec:"PCIe, WiFi 6E + BT5.3",                tier:4, stock:true },
+  { id:"nc-05", category:"networkcard", brand:"Asus",    name:"Asus XG-C100C 10G LAN",        spec:"PCIe, 10 Gigabit Ethernet",            tier:5, stock:true },
+
+  { id:"wc-01", category:"webcam", brand:"Value",    name:"Webcam 720p Basic",       spec:"720p 30fps, USB, mic bawaan",          tier:1, stock:true },
+  { id:"wc-02", category:"webcam", brand:"Logitech", name:"Logitech C270",           spec:"720p HD, USB, fixed focus",            tier:2, stock:true },
+  { id:"wc-03", category:"webcam", brand:"Logitech", name:"Logitech C920",           spec:"1080p Full HD, autofocus, stereo mic", tier:3, stock:true },
+  { id:"wc-04", category:"webcam", brand:"Logitech", name:"Logitech Brio 500",       spec:"1080p 60fps, HDR, auto light correct", tier:4, stock:true },
+  { id:"wc-05", category:"webcam", brand:"Elgato",   name:"Elgato Facecam Pro",      spec:"4K60 Ultra HD, Sony sensor",           tier:5, stock:true },
 ];
 
-/* Urutan & label kategori yang ditampilkan di builder.html */
+/* Urutan & label kategori yang ditampilkan di builder.html.
+   group: "inti" (komponen utama PC) atau "aksesoris" (tambahan) —
+   dipakai buat mengelompokkan baris dropdown di halaman Rakit PC. */
 const CATEGORY_LIST = [
-  { key:"cpu",         label:"Processor (CPU)", multi:false },
-  { key:"motherboard", label:"Motherboard",     multi:false },
-  { key:"ram",         label:"RAM",             multi:true  },
-  { key:"gpu",         label:"VGA Card (GPU)",  multi:true  },
-  { key:"storage",     label:"Storage",         multi:true  },
-  { key:"psu",         label:"Power Supply (PSU)", multi:false },
-  { key:"casing",      label:"Casing",          multi:false },
-  { key:"monitor",     label:"Monitor",         multi:false },
+  { key:"cpu",         label:"Processor (CPU)",     multi:false, group:"inti" },
+  { key:"motherboard", label:"Motherboard",         multi:false, group:"inti" },
+  { key:"ram",         label:"RAM",                 multi:true,  group:"inti" },
+  { key:"gpu",         label:"VGA Card (GPU)",      multi:true,  group:"inti" },
+  { key:"storage",     label:"Storage",             multi:true,  group:"inti" },
+  { key:"psu",         label:"Power Supply (PSU)",  multi:false, group:"inti" },
+  { key:"casing",      label:"Casing",              multi:false, group:"inti" },
+  { key:"monitor",     label:"Monitor",             multi:false, group:"inti" },
+  { key:"mouse",       label:"Mouse",               multi:false, group:"aksesoris" },
+  { key:"keyboard",    label:"Keyboard",            multi:false, group:"aksesoris" },
+  { key:"mousepad",    label:"Mouse Pad",           multi:false, group:"aksesoris" },
+  { key:"os",          label:"Operating System",    multi:false, group:"aksesoris" },
+  { key:"headphone",   label:"Headphone",           multi:false, group:"aksesoris" },
+  { key:"networkcard", label:"Network Card",        multi:false, group:"aksesoris" },
+  { key:"webcam",      label:"Webcam",              multi:false, group:"aksesoris" },
 ];
+
+/* Ikon per kategori — dipakai di baris dropdown halaman Rakit PC. */
+const CATEGORY_ICONS = {
+  cpu:"🔲", motherboard:"🧩", ram:"💾", gpu:"🎮", storage:"💽",
+  psu:"🔌", casing:"🖥️", monitor:"🖵",
+  mouse:"🖱️", keyboard:"⌨️", mousepad:"⬛", os:"💿",
+  headphone:"🎧", networkcard:"📶", webcam:"📷"
+};

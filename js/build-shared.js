@@ -68,6 +68,8 @@ function decodeBuildCode(raw){
 }
 
 /* ---------- ITEM LOOKUP (versi parametrik, bukan dari state global) ---------- */
+const SINGLE_CATEGORIES = ["cpu","motherboard","psu","casing","monitor","mouse","keyboard","mousepad","os","headphone","networkcard","webcam"];
+
 function getSelectedProductFrom(single, cat){
   const id = single ? single[cat] : null;
   return id ? byIdShared(id) : null;
@@ -80,7 +82,7 @@ function getMultiListFrom(multi, cat){
 }
 function allItemsFrom(single, multi){
   const items = [];
-  ["cpu","motherboard","psu","casing","monitor"].forEach(cat=>{
+  SINGLE_CATEGORIES.forEach(cat=>{
     const p = getSelectedProductFrom(single, cat);
     if(p) items.push({ product:p, qty:1 });
   });

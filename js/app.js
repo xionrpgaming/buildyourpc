@@ -31,7 +31,7 @@ function getMultiList(cat){
 }
 function allSelectedItems(){
   const items = [];
-  ["cpu","motherboard","psu","casing","monitor"].forEach(cat=>{
+  SINGLE_CATEGORIES.forEach(cat=>{
     const p = getSelectedProduct(cat);
     if(p) items.push({ product:p, qty:1 });
   });
@@ -59,207 +59,6 @@ function compatInfo(){
    bobot di bawah bila Anda punya acuan benchmark sendiri. */
 function calcBuildScore(){
   return calcBuildScoreFrom(state.single, state.multi);
-}
-
-/* ---------- FILTER OPTIONS ---------- */
-const FILTER_DEFS = {
-  cpu: [ {key:"brand", label:"Manufacturer"}, {key:"socket", label:"Socket"}, {key:"generation", label:"Generasi"} ],
-  motherboard: [ {key:"brand", label:"Manufacturer"}, {key:"socket", label:"Socket"}, {key:"memoryType", label:"Tipe RAM"}, {key:"formFactor", label:"Form Factor"} ],
-  ram: [ {key:"memoryType", label:"Tipe"}, {key:"capacity", label:"Kapasitas (GB)"}, {key:"speed", label:"Speed"} ],
-  gpu: [ {key:"brand", label:"Manufacturer"}, {key:"series", label:"Generasi"}, {key:"vram", label:"VRAM (GB)"} ],
-  storage: [ {key:"type", label:"Tipe"}, {key:"speedTier", label:"Kecepatan"} ],
-  psu: [ {key:"wattage", label:"Daya (W)"}, {key:"rating", label:"Sertifikasi"} ],
-  casing: [ {key:"formFactor", label:"Form Factor"} ],
-  monitor: [ {key:"resolution", label:"Resolusi"}, {key:"refreshRate", label:"Refresh Rate (Hz)"} ],
-};
-
-function uniqueValues(cat, key){
-  return [...new Set(catProducts(cat).map(p => p[key]))].sort((a,b)=> (a>b?1:-1));
-}
-
-function filteredProducts(cat){
-  let list = catProducts(cat);
-  const f = state.filters[cat];
-  if(f.inStock) list = list.filter(p=>p.stock);
-  FILTER_DEFS[cat].forEach(def=>{
-    const set = f[def.key];
-    if(set && set.size) list = list.filter(p => set.has(String(p[def.key])));
-  });
-
-  // Compatibility-aware sorting/highlighting handled in render (not hard filter),
-  // except RAM <-> motherboard memory type, and monitor <-> GPU tier which we soft-flag.
-  return list;
-}
-
-/* ---------- RENDER: NAV ---------- */
-function renderNav(){
-  const nav = $("#category-nav");
-  nav.innerHTML = CATEGORY_LIST.map(c=>{
-    const count = c.multi ? getMultiList(c.key).length : (state.single[c.key] ? 1 : 0);
-    const active = c.key === state.activeCategory ? "active" : "";
-    return `<button class="nav-item ${active}" data-cat="${c.key}">
-      <span>${c.label}</span>
-      ${count ? `<span class="nav-badge">${count}</span>` : ""}
-    </button>`;
-  }).join("");
-  $$("#category-nav .nav-item").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      state.activeCategory = btn.dataset.cat;
-      renderAll();
-    });
-  });
-}
-
-/* ---------- RENDER: FILTER SIDEBAR ---------- */
-function renderFilters(){
-  const cat = state.activeCategory;
-  const panel = $("#filter-panel");
-  const defs = FILTER_DEFS[cat];
-  const f = state.filters[cat];
-
-  panel.innerHTML = `
-    <div class="filter-header">
-      <span class="filter-title">Filters</span>
-    </div>
-    <label class="filter-instock">
-      <input type="checkbox" id="f-instock" ${f.inStock ? "checked":""}/>
-      In Stock
-    </label>
-    ${defs.map(def=>{
-      const values = uniqueValues(cat, def.key);
-      const set = f[def.key] || new Set();
-      return `<div class="filter-section">
-        <button class="filter-section-head" data-toggle="${def.key}">
-          <span>${def.label}</span><span class="chev">⌃</span>
-        </button>
-        <div class="filter-section-body" data-body="${def.key}">
-          ${values.map(v=>`
-            <label class="filter-check">
-              <input type="checkbox" data-filter-key="${def.key}" value="${v}" ${set.has(String(v)) ? "checked":""}/>
-              ${v}
-            </label>`).join("")}
-        </div>
-      </div>`;
-    }).join("")}
-  `;
-
-  $("#f-instock").addEventListener("change", e=>{
-    f.inStock = e.target.checked;
-    renderGrid();
-  });
-  $$("#filter-panel [data-filter-key]").forEach(cb=>{
-    cb.addEventListener("change", ()=>{
-      const key = cb.dataset.filterKey;
-      f[key] = f[key] || new Set();
-      if(cb.checked) f[key].add(cb.value); else f[key].delete(cb.value);
-      renderGrid();
-    });
-  });
-  $$("#filter-panel .filter-section-head").forEach(head=>{
-    head.addEventListener("click", ()=>{
-      const body = panel.querySelector(`[data-body="${head.dataset.toggle}"]`);
-      body.classList.toggle("collapsed");
-      head.classList.toggle("collapsed");
-    });
-  });
-}
-
-/* ---------- RENDER: PRODUCT GRID ---------- */
-function renderGrid(){
-  const cat = state.activeCategory;
-  const catDef = CATEGORY_LIST.find(c=>c.key===cat);
-  const grid = $("#product-grid");
-  const list = filteredProducts(cat);
-
-  const cpu = getSelectedProduct("cpu");
-  const mobo = getSelectedProduct("motherboard");
-  const gpuList = getMultiList("gpu");
-  const gpuTierMax = gpuList.length ? Math.max(...gpuList.map(g=>g.product.tier)) : null;
-
-  $("#grid-title").textContent = catDef.label;
-  $("#grid-count").textContent = `${list.length} produk`;
-
-  if(!list.length){
-    grid.innerHTML = `<div class="empty-state">Tidak ada produk yang cocok dengan filter ini.</div>`;
-    return;
-  }
-
-  grid.innerHTML = list.map(p=>{
-    let compatBadge = "";
-    if(cat === "motherboard" && cpu){
-      compatBadge = p.socket === cpu.socket
-        ? `<span class="badge badge-ok">✓ Cocok dgn CPU</span>`
-        : `<span class="badge badge-warn">Socket berbeda (${p.socket})</span>`;
-    }
-    if(cat === "ram" && mobo){
-      compatBadge = p.memoryType === mobo.memoryType
-        ? `<span class="badge badge-ok">✓ Cocok dgn Motherboard</span>`
-        : `<span class="badge badge-warn">Bukan ${mobo.memoryType}</span>`;
-    }
-    if(cat === "casing" && mobo){
-      compatBadge = p.supportedFormFactors.includes(mobo.formFactor)
-        ? `<span class="badge badge-ok">✓ Muat Motherboard Anda</span>`
-        : `<span class="badge badge-danger">Tidak muat (${mobo.formFactor})</span>`;
-    }
-    if(cat === "monitor" && gpuTierMax){
-      compatBadge = p.minGpuTier <= gpuTierMax
-        ? `<span class="badge badge-ok">✓ Direkomendasikan untuk GPU Anda</span>`
-        : `<span class="badge badge-info">Cocok untuk GPU lebih tinggi</span>`;
-    }
-
-    const isMulti = catDef.multi;
-    const selectedQty = isMulti ? (state.multi[cat][p.id] || 0) : (state.single[cat]===p.id ? 1 : 0);
-    const stockBadge = p.stock ? "" : `<span class="badge badge-oos">Stok Habis</span>`;
-
-    return `<div class="product-card ${selectedQty ? "selected":""}">
-      <div class="product-top">
-        <span class="product-brand">${p.brand}</span>
-        ${stockBadge}
-      </div>
-      <div class="product-name">${p.name}</div>
-      <div class="product-spec">${p.spec}</div>
-      <div class="product-badges">${compatBadge}</div>
-      <div class="product-actions">
-        ${isMulti
-          ? `<div class="qty-stepper">
-               <button class="qty-btn" data-act="dec" data-id="${p.id}" ${!p.stock?"disabled":""}>−</button>
-               <span class="qty-val">${selectedQty}</span>
-               <button class="qty-btn" data-act="inc" data-id="${p.id}" ${!p.stock?"disabled":""}>+</button>
-             </div>`
-          : `<button class="select-btn ${selectedQty?"is-selected":""}" data-id="${p.id}" ${!p.stock?"disabled":""}>
-               ${selectedQty ? "✓ Dipilih" : "Pilih"}
-             </button>`
-        }
-      </div>
-    </div>`;
-  }).join("");
-
-  if(catDef.multi){
-    $$("#product-grid .qty-btn").forEach(btn=>{
-      btn.addEventListener("click", ()=>{
-        const id = btn.dataset.id;
-        const p = byId(id);
-        const cur = state.multi[cat][id] || 0;
-        const max = p.qtyMax || 1;
-        let next = btn.dataset.act === "inc" ? cur+1 : cur-1;
-        next = Math.max(0, Math.min(max, next));
-        state.multi[cat][id] = next;
-        renderGrid();
-        renderSummary();
-        renderNav();
-      });
-    });
-  } else {
-    $$("#product-grid .select-btn").forEach(btn=>{
-      btn.addEventListener("click", ()=>{
-        const id = btn.dataset.id;
-        state.single[cat] = state.single[cat] === id ? null : id;
-        renderGrid();
-        renderSummary();
-        renderNav();
-      });
-    });
-  }
 }
 
 /* ---------- RENDER: SUMMARY / BUILD SCORE ---------- */
@@ -641,14 +440,13 @@ function initResetButton(){
 
 /* ---------- INIT ---------- */
 function renderAll(){
-  renderNav();
-  renderFilters();
-  renderGrid();
+  refreshAllPickerRows();
   renderSummary();
 }
 
 document.addEventListener("DOMContentLoaded", ()=>{
-  renderAll();
+  initPickers();
+  renderSummary();
   initWaButton();
   initResetButton();
   initSaveLoad();
