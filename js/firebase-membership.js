@@ -105,7 +105,61 @@ async function requestMembershipUpgrade(uid, tier){
   });
 }
 
-/* ---------- Khusus admin ---------- */
+/* ---------- Dashboard Pengunjung ---------- */
+
+/* Dicatat sekali per page-load, TANPA perlu login (rules Firestore
+   mengizinkan create anonim ke koleksi "visits", tapi cuma admin
+   yang bisa baca/list-nya). Dipanggil dari js/visit-tracker.js di
+   setiap halaman publik. */
+function logPageVisit(pageName){
+  if(!FIREBASE_READY) return;
+  try{
+    fbDb.collection("visits").add({
+      page: pageName,
+      ref: (document.referrer || "direct").slice(0,200),
+      w: window.innerWidth,
+      ts: firebase.firestore.FieldValue.serverTimestamp()
+    }).catch(()=>{});
+  } catch(e){}
+}
+
+/* ---------- Khusus admin: baca statistik kunjungan ---------- */
+function startOfDay(daysAgo){
+  const d = new Date();
+  d.setHours(0,0,0,0);
+  d.setDate(d.getDate() - (daysAgo || 0));
+  return firebase.firestore.Timestamp.fromDate(d);
+}
+
+async function countVisits(query){
+  const snap = await query.count().get();
+  return snap.data().count;
+}
+
+async function getVisitStats(pages){
+  const col = fbDb.collection("visits");
+  const [total, today] = await Promise.all([
+    countVisits(col),
+    countVisits(col.where("ts", ">=", startOfDay(0))),
+  ]);
+
+  const perPage = {};
+  await Promise.all(pages.map(async (pg)=>{
+    perPage[pg] = await countVisits(col.where("page", "==", pg));
+  }));
+
+  const last7 = [];
+  for(let i=6; i>=0; i--){
+    const from = startOfDay(i);
+    const to = startOfDay(i-1);
+    const count = await countVisits(col.where("ts", ">=", from).where("ts", "<", to));
+    last7.push({ daysAgo:i, count });
+  }
+
+  return { total, today, perPage, last7 };
+}
+
+/* ---------- Khusus admin: kelola permintaan membership ---------- */
 async function listPendingMembers(){
   const q = await fbDb.collection("members").where("hasPending", "==", true).get();
   const out = [];
