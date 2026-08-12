@@ -26,12 +26,14 @@ const MOBO_SOCKET_PLATFORM = {
    tidak terpengaruh platform. */
 function catProductsFiltered(cat){
   let list = catProducts(cat);
-  if(selectedPlatform){
-    if(cat === "cpu"){
-      list = list.filter(p => p.brand === selectedPlatform);
-    } else if(cat === "motherboard"){
-      list = list.filter(p => MOBO_SOCKET_PLATFORM[p.socket] === selectedPlatform);
-    }
+  if(cat === "cpu"){
+    if(selectedPlatform) list = list.filter(p => p.brand === selectedPlatform);
+    const mobo = getSelectedProduct("motherboard");
+    if(mobo) list = list.filter(p => p.socket === mobo.socket);
+  } else if(cat === "motherboard"){
+    if(selectedPlatform) list = list.filter(p => MOBO_SOCKET_PLATFORM[p.socket] === selectedPlatform);
+    const cpu = getSelectedProduct("cpu");
+    if(cpu) list = list.filter(p => p.socket === cpu.socket);
   }
   return list;
 }
@@ -172,6 +174,17 @@ function renderPickerList(cat, searchTerm, animate){
         state.single[cat] = id;
         closePicker(cat);
         refreshPickerRow(cat);
+
+        // CPU <-> Motherboard saling terkait socket-nya secara ketat
+        if(cat === "cpu"){
+          const mobo = getSelectedProduct("motherboard");
+          if(mobo && mobo.socket !== byId(id).socket) state.single.motherboard = null;
+          refreshPickerRow("motherboard");
+        } else if(cat === "motherboard"){
+          const cpu = getSelectedProduct("cpu");
+          if(cpu && cpu.socket !== byId(id).socket) state.single.cpu = null;
+          refreshPickerRow("cpu");
+        }
       }
       renderSummary();
       refreshAllCompatBadgesSoftly();
@@ -244,9 +257,18 @@ function refreshPickerRow(cat){
 
   const filterHint = row.querySelector(".picker-row-filter-hint");
   if(filterHint){
-    const show = selectedPlatform && (cat === "cpu" || cat === "motherboard");
-    filterHint.textContent = show ? `disaring: ${selectedPlatform}` : "";
-    filterHint.classList.toggle("hidden", !show);
+    let hintText = "";
+    if(cat === "cpu"){
+      const mobo = getSelectedProduct("motherboard");
+      if(mobo) hintText = `disaring: socket ${mobo.socket}`;
+      else if(selectedPlatform) hintText = `disaring: ${selectedPlatform}`;
+    } else if(cat === "motherboard"){
+      const cpu = getSelectedProduct("cpu");
+      if(cpu) hintText = `disaring: socket ${cpu.socket}`;
+      else if(selectedPlatform) hintText = `disaring: ${selectedPlatform}`;
+    }
+    filterHint.textContent = hintText;
+    filterHint.classList.toggle("hidden", !hintText);
   }
 
   const filled = catDef.multi ? getMultiList(cat).length > 0 : !!state.single[cat];
@@ -330,6 +352,8 @@ function initPickers(){
         e.stopPropagation();
         state.single[cat] = null;
         refreshPickerRow(cat);
+        if(cat === "cpu") refreshPickerRow("motherboard");
+        if(cat === "motherboard") refreshPickerRow("cpu");
         renderSummary();
         refreshAllCompatBadgesSoftly();
       });
