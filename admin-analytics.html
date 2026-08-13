@@ -42,10 +42,16 @@
       </div>
 
       <p class="panel-subtitle" style="margin-top:26px;">7 Hari Terakhir</p>
-      <div class="analytics-chart" id="analytics-chart"></div>
+      <table class="analytics-table" id="analytics-table-days">
+        <thead><tr><th>Tanggal</th><th>Kunjungan</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
 
       <p class="panel-subtitle" style="margin-top:26px;">Per Halaman</p>
-      <div class="analytics-pages" id="analytics-pages"></div>
+      <table class="analytics-table" id="analytics-table-pages">
+        <thead><tr><th>Halaman</th><th>Kunjungan</th><th>Persentase</th></tr></thead>
+        <tbody></tbody>
+      </table>
 
       <p class="cekpc-honesty-note" style="margin-top:22px;">Catatan: ini penghitung ringan bawaan situs (jumlah page-load, belum membedakan pengunjung unik/bot). Untuk analisa lebih dalam (asal traffic, device, lokasi, dsb), Firebase Analytics (GA4) juga sudah aktif di project ini — cek di <a href="https://analytics.google.com" target="_blank" rel="noopener" style="color:var(--accent);">analytics.google.com</a>.</p>
     </div>
@@ -71,42 +77,48 @@
   async function renderStats(){
     $("#stat-total").textContent = "…";
     $("#stat-today").textContent = "…";
-    $("#analytics-chart").innerHTML = `<p class="adminm-empty">Memuat...</p>`;
-    $("#analytics-pages").innerHTML = "";
+    $("#analytics-table-days tbody").innerHTML = `<tr><td colspan="3" class="adminm-empty">Memuat...</td></tr>`;
+    $("#analytics-table-pages tbody").innerHTML = "";
 
     let stats;
     try{
       stats = await getVisitStats(PAGES);
     } catch(err){
-      $("#analytics-chart").innerHTML = `<p class="adminm-empty">Gagal memuat data: ${err.message}</p>`;
+      $("#analytics-table-days tbody").innerHTML = `<tr><td colspan="3" class="adminm-empty">Gagal memuat data: ${err.message}</td></tr>`;
       return;
     }
 
     $("#stat-total").textContent = stats.total;
     $("#stat-today").textContent = stats.today;
 
+    const today = new Date();
     const maxCount = Math.max(1, ...stats.last7.map(d=>d.count));
-    $("#analytics-chart").innerHTML = stats.last7.map((d,i)=>{
+    $("#analytics-table-days tbody").innerHTML = stats.last7.map((d,i)=>{
+      const dateObj = new Date(today); dateObj.setDate(today.getDate() - d.daysAgo);
+      const dateStr = dateObj.toLocaleDateString("id-ID", { weekday:"short", day:"numeric", month:"short" });
       const pct = Math.round((d.count / maxCount) * 100);
       return `
-        <div class="analytics-bar-col">
-          <span class="analytics-bar-val">${d.count}</span>
-          <div class="analytics-bar-track"><div class="analytics-bar-fill" style="height:${pct}%"></div></div>
-          <span class="analytics-bar-label">${DAY_LABELS[i]}</span>
-        </div>
+        <tr>
+          <td>${DAY_LABELS[i]} <span class="analytics-table-sub">(${dateStr})</span></td>
+          <td class="analytics-table-num">${d.count}</td>
+          <td><div class="analytics-inline-track"><div class="analytics-inline-fill" style="width:${pct}%"></div></div></td>
+        </tr>
       `;
     }).join("");
 
-    const maxPage = Math.max(1, ...PAGES.map(pg=>stats.perPage[pg]||0));
-    $("#analytics-pages").innerHTML = PAGES.map(pg=>{
+    const total = stats.total || 1;
+    $("#analytics-table-pages tbody").innerHTML = PAGES.map(pg=>{
       const count = stats.perPage[pg] || 0;
-      const pct = Math.round((count / maxPage) * 100);
+      const pct = Math.round((count / total) * 100);
       return `
-        <div class="analytics-page-row">
-          <span class="analytics-page-name">${pg}</span>
-          <div class="analytics-page-track"><div class="analytics-page-fill" style="width:${pct}%"></div></div>
-          <span class="analytics-page-count">${count}</span>
-        </div>
+        <tr>
+          <td><code>${pg}</code></td>
+          <td class="analytics-table-num">${count}</td>
+          <td>
+            <div class="analytics-inline-track"><div class="analytics-inline-fill" style="width:${pct}%"></div></div>
+            <span class="analytics-table-sub">${pct}%</span>
+          </td>
+        </tr>
       `;
     }).join("");
   }
