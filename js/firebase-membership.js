@@ -132,8 +132,8 @@ function startOfDay(daysAgo){
 }
 
 async function countVisits(query){
-  const snap = await query.count().get();
-  return snap.data().count;
+  const snap = await query.get();
+  return snap.size !== undefined ? snap.size : (snap.docs ? snap.docs.length : 0);
 }
 
 async function getVisitStats(pages){
