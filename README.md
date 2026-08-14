@@ -1,4 +1,4 @@
-# Xion Gaming — Website Rakit PC
+# Xion Gaming — Website Rakit PC 
 
 Website statis (HTML/CSS/JS biasa, tanpa backend/database) untuk memilih
 komponen PC, cek kompatibilitas otomatis, lihat estimasi skor kekuatan
