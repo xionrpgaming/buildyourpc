@@ -75,9 +75,101 @@
     });
   }
 
+  // ---------- Testimoni <-> Brand Partner: layer bergantian ----------
+  function initTestiBrandAlternation() {
+    const card = document.querySelector(".js-testi-card");
+    if (!card) return;
+    const dots = card.querySelectorAll(".testi-dot");
+    const views = card.querySelectorAll(".testi-view");
+    const titleEl = document.getElementById("testiCardTitle");
+    const TITLES = { testi: "💬 Testimoni Pelanggan", brand: "🤝 Brand Partner Kami" };
+    let current = "testi";
+
+    function showView(name) {
+      current = name;
+      views.forEach((v) => v.classList.toggle("testi-view-active", v.dataset.view === name));
+      dots.forEach((d) => d.classList.toggle("active", d.dataset.view === name));
+      if (titleEl) titleEl.textContent = TITLES[name];
+    }
+
+    dots.forEach((dot) => {
+      dot.addEventListener("click", (e) => {
+        e.stopPropagation();
+        showView(dot.dataset.view);
+        resetTimer();
+      });
+    });
+
+    let timer;
+    function resetTimer() {
+      clearInterval(timer);
+      timer = setInterval(() => showView(current === "testi" ? "brand" : "testi"), 6000);
+    }
+    resetTimer();
+  }
+
+  // ---------- Sidebar "Testimoni" / "Untuk Bisnis" -> scroll + kedip sorot ----------
+  function initAnchorPulse() {
+    const links = document.querySelectorAll(".js-anchor-jump");
+    if (!links.length) return;
+    links.forEach((link) => {
+      link.addEventListener("click", (e) => {
+        const targetId = link.dataset.target;
+        const target = document.getElementById(targetId);
+        if (!target) return;
+        e.preventDefault();
+        target.scrollIntoView({ behavior: "smooth", block: "center" });
+        target.classList.remove("pulse-highlight");
+        // force reflow biar animasinya bisa diulang walau baru saja jalan
+        void target.offsetWidth;
+        target.classList.add("pulse-highlight");
+        setTimeout(() => target.classList.remove("pulse-highlight"), 1400);
+      });
+    });
+  }
+
+  // ---------- Testimoni: klik kartu -> buka modal semua testimoni ----------
+  function initTestiModal() {
+    const card = document.querySelector(".js-testi-card");
+    const modal = document.getElementById("testiModal");
+    if (!card || !modal) return;
+    const closeBtn = document.getElementById("testiModalClose");
+
+    function openModal(e) {
+      if (e.target.closest(".testi-dots")) return; // klik titik indikator jangan buka modal
+      modal.classList.add("show");
+    }
+    function closeModal() {
+      modal.classList.remove("show");
+    }
+    card.addEventListener("click", openModal);
+    closeBtn.addEventListener("click", closeModal);
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) closeModal();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeModal();
+    });
+  }
+
+  // ---------- B2B: klik di mana saja pada kartu -> buka WhatsApp ----------
+  function initBisnisCardClick() {
+    const card = document.querySelector(".js-bisnis-card");
+    if (!card) return;
+    card.addEventListener("click", (e) => {
+      if (e.target.closest("a")) return; // biarkan tombol/link di dalamnya jalan normal
+      const href = card.dataset.waHref;
+      if (href) window.open(href, "_blank", "noopener");
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", () => {
     initScrollReveal();
     initParticles();
     initBetaNotice();
+    initTestiBrandAlternation();
+    initAnchorPulse();
+    initTestiModal();
+    initBisnisCardClick();
   });
 })();
